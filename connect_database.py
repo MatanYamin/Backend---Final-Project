@@ -1,11 +1,11 @@
 import mysql.connector as mysql
 
 # enter your server IP address/domain name
-HOST = "172.31.0.145"  # or "domain.com"
+HOST = "3.138.43.76"  # or "domain.com"
 # database name, if you want just to connect to MySQL server, leave it empty
 DATABASE = "skycleaner"
 # this is the user you create
-USER = "matan"
+USER = "matanym"
 # user password
 PASSWORD = "Password"
 # connect to MySQL server
