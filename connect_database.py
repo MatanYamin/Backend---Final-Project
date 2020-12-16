@@ -1,14 +1,19 @@
 import mysql.connector as mysql
 
-# enter your server IP address/domain name
-HOST = "3.138.43.76"  # or "domain.com"
-# database name, if you want just to connect to MySQL server, leave it empty
-DATABASE = "skycleaner"
-# this is the user you create
-USER = "matanym"
-# user password
-PASSWORD = "Password"
-# connect to MySQL server
-db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD, port=3306)
-print("Connected to:", db_connection.get_server_info())
-# enter your code here!
+
+def connect_db():
+    # enter your server IP address/domain name
+    host_ip = "3.138.43.76"
+    # database name I want to connect to
+    database = "skycleaner"
+    # this is the user name I created
+    user_name = "matanym"
+    # user password
+    password = "Password"
+    # connect to MySQL server
+    db_connection = mysql.connect(host=host_ip, database=database, user=user_name, password=password, port=3306)
+    print("Connected to:", db_connection.get_server_info())
+
+
+if __name__ == '__main__':
+    connect_db()
