@@ -15,9 +15,6 @@ def matan_main():
     Prints the start and name of the next 10 events on the user's calendar.
     """
     creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
@@ -34,7 +31,6 @@ def matan_main():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-
     # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
