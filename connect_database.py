@@ -12,6 +12,7 @@ def connect_db():
     password = "Password"
     # connect to MySQL server
     db_connection = mysql.connect(host=host_ip, database=database, user=user_name, password=password, port=3306)
+    return db_connection
     print("Connected to:", db_connection.get_server_info())
 
 
