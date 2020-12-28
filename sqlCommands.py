@@ -8,7 +8,8 @@ import connect_database as con
 
 
 def connect_db():
-    """need to run few edge tests"""
+    """need to run few edge tests
+    checked some thing"""
     connection = con.connect_db()
     cursor = connection.cursor()
     return cursor, connection
@@ -18,7 +19,8 @@ def select_db(query):
     """this function needs to retrieve something from DB
          it will retrieve whatever we want as long we define it first
          still has some changes to make
-         note to myself: add all options that is needed!"""
+         note to myself: add all options that is needed!
+         checked somethings"""
     this_query = ""
     rows = ""
     if query == "*":
@@ -40,8 +42,8 @@ def select_db(query):
       cursor.execute(this_query)
       rows += cursor.fetchall()
 
-    return rows
 
+    return rows
 
 #commiting the connection then closing it.
 # connection.commit()
