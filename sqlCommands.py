@@ -53,13 +53,14 @@ def select_db(query):
 if __name__ == '__main__':
     # connection = con.connect_db()
     # cursor = connection.cursor()
+
     cursor, connection = connect_db()
-    datas = select_db("dates")
-    for i in datas:
-        print(i)
+    retrieve_from_db = select_db("dates")
+    for line in retrieve_from_db:
+        print(line)
 
     connection.commit()
-    connection.close()
+    connection.close()  # closing connection after the connect
     # executing the quires
     # cursor.execute(retrive)
     # data = cursor.fetchall()
