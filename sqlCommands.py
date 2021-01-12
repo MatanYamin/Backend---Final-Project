@@ -22,12 +22,13 @@ def select_db(query):
          note to myself: add all options that is needed!
          checked somethings"""
     this_query = ""
-    rows = ""
-    if query == "*":
+    rows = []
+    if query == "all":
       # incase we want all (for tests),
       # ***still need to have some tests
-      this_query += "Select notes from ea_appointments;"
+      this_query += "Select * from ea_appointments;"
       cursor.execute(this_query)
+      # print(cursor.fetchall())
       rows += cursor.fetchall()
     elif query == "dates":
         # incase we want only dates,
@@ -41,6 +42,14 @@ def select_db(query):
       this_query += "Select notes from ea_appointments;"
       cursor.execute(this_query)
       rows += cursor.fetchall()
+    elif query == "start":
+        this_query += "Select start_datetime from ea_appointments;"
+        cursor.execute(this_query)
+        rows += cursor.fetchall()
+    elif query == "end":
+        this_query += "Select end_datetime from ea_appointments;"
+        cursor.execute(this_query)
+        rows += cursor.fetchall()
 
 
     return rows
@@ -55,14 +64,10 @@ if __name__ == '__main__':
     # cursor = connection.cursor()
 
     cursor, connection = connect_db()
-    retrieve_from_db = select_db("dates")
+    retrieve_from_db = select_db("end")
     for line in retrieve_from_db:
-        print(line)
+        print(line[0])
 
     connection.commit()
     connection.close()  # closing connection after the connect
-    # executing the quires
-    # cursor.execute(retrive)
-    # data = cursor.fetchall()
-    # for row in data:
-    #     print(row)
+
