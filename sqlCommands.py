@@ -16,6 +16,7 @@ def get_last_event():
     query = "SELECT * FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
     second_query ="SELECT * FROM ea_users ORDER BY ID DESC LIMIT 1;"
     third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
+    # ********************** check that id is matching! ************************* #
     cursor.execute(query)
     times_and_note = cursor.fetchall()
     data_list.append(times_and_note)
@@ -25,7 +26,6 @@ def get_last_event():
     cursor.execute(third_query)
     service = cursor.fetchall()
     data_list.append(service)
-    # return times_and_note, user_details
     return data_list
 
 
