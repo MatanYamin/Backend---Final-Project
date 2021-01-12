@@ -1,30 +1,18 @@
 import pymysql
-import connect_database as con
-import httplib2
-import os
-
-from apiclient import discovery
-
-
-
-# database connection
-
-# queries for retrievint all rows
-# retrive = "Select notes from ea_appointments;"
+import connect_database as connect
+import synCalendar as sync
 
 
 def connect_db():
-    """need to run few edge tests
-    checked some thing"""
-    connection = con.connect_db()
+    """connects to DB"""
+    connection = connect.connect_db()
     cursor = connection.cursor()
     return cursor, connection
 
 
-def get_last_query():
+def get_last_event():
+    """still need to add a loop that runs all the time"""
     data_list = []
-    # times_and_note = []
-    # user_details = []
     query = "SELECT * FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
     second_query ="SELECT * FROM ea_users ORDER BY ID DESC LIMIT 1;"
     third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
@@ -41,7 +29,6 @@ def get_last_query():
     return data_list
 
 
-
 def select_db(query):
     """this function needs to retrieve something from DB
          it will retrieve whatever we want as long we define it first
@@ -52,24 +39,12 @@ def select_db(query):
     rows = []
     id = []
     if query == "all":
-      # incase we want all (for tests),
-      # ***still need to have some tests
       this_query += "Select * from ea_appointments;"
-      get_id = "Select id from "
       cursor.execute(this_query)
-      # print(cursor.fetchall())
       rows += cursor.fetchall()
       id.append()
-    elif query == "dates":
-        # incase we want only dates,
-        # ***still need to have some tests"""
-      this_query += "Select notes from ea_appointments;"
-      cursor.execute(this_query)
-      rows += cursor.fetchall()
     elif query == "email":
-      # incase we want only emails,
-      # ***still need to have some tests"""
-      this_query += "Select notes from ea_appointments;"
+      this_query += "Select email from ea_appointments;"
       cursor.execute(this_query)
       rows += cursor.fetchall()
     elif query == "start":
@@ -80,68 +55,57 @@ def select_db(query):
         this_query += "Select end_datetime from ea_appointments;"
         cursor.execute(this_query)
         rows += cursor.fetchall()
-
-
+    elif query == "address":
+        this_query += "Select address from ea_appointments;"
+        cursor.execute(this_query)
+        rows += cursor.fetchall()
+        this_query += "Select city from ea_appointments;"
+        cursor.execute(this_query)
+        rows += cursor.fetchall()
     return rows
 
-#commiting the connection then closing it.
-# connection.commit()
-# connection.close()
 
-
-def create_event(data):
+def get_event_data(event):
     list_of_items = []
-    for i in data:
+    dict = {}
+    for i in event:
         for j in i:
             for k in j:
                 list_of_items.append(k)
-    print(list_of_items)
-    # print(list_of_items)
-    id = list_of_items[8]
-    made_appointment_time = list_of_items[1]
-    start_time = list_of_items[2]
-    end_time = list_of_items[3]
-    note = list_of_items[4]
-    first_name = list_of_items[12]
-    family_name = list_of_items[13]
-    email = list_of_items[14]
-    phone = list_of_items[16]
-    street = list_of_items[17]
-    city = list_of_items[18]
-    zip_code = list_of_items[20]
-    service = list_of_items[-1]
-    print("made_appointment_time", made_appointment_time)
-    print("start_time", start_time)
-    print("end_time", end_time)
-    print("note", note)
-    print("id", id)
-    print("first_name", first_name)
-    print("family_name", family_name)
-    print("mail", email)
-    print("phone", phone)
-    print("street", street)
-    print("city", city)
-    print("zip_code", zip_code)
-    print("service", service)
-    full_address = street + ',' + city + ',' + zip_code
-    summary = "ניקוי עם סקייקלינר!"
+    dict["start_time"] = list_of_items[2].isoformat()
+    dict["end_time"] = list_of_items[3].isoformat()
+    dict["note"] = list_of_items[4]
+    dict["first_name"] = list_of_items[12]
+    dict["family_name"] = list_of_items[13]
+    dict["email"] = list_of_items[14]
+    dict["phone"] = list_of_items[16]
+    dict["street"] = list_of_items[17]
+    dict["city"] = list_of_items[18]
+    dict["zip_code"] = list_of_items[20]
+    dict["full_address"] = dict["street"] + ', ' + dict["city"] + ', ' + dict["zip_code"]
+    dict["summary"] = "ניקוי עם סקיי-קלינר!"
+    return dict
+
+
+def create_and_insert(service, data):
+
     event = {
-        'summary': summary,
-        'location': full_address,
-        'description': 'A chance to hear more about Google\'s developer products.',
+        'summary': data["summary"],
+        'location': data["full_address"],
+        'description': "ניקיון של סקיי קלינר ספות",
         'start': {
-            'dateTime': start_time,
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': data["start_time"],
+            'timeZone': 'Asia/Jerusalem',
         },
         'end': {
-            'dateTime': end_time,
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': data["end_time"],
+            'timeZone': 'Asia/Jerusalem',
         },
         'recurrence': [
-            'RRULE:FREQ=DAILY;COUNT=2'
+            'RRULE:FREQ=DAILY;COUNT=1'
         ],
         'attendees': [
-            {'email': email},
+            {'email': 'lpage@example.com'},
             {'email': 'sbrin@example.com'},
         ],
         'reminders': {
@@ -157,12 +121,12 @@ def create_event(data):
 
 
 if __name__ == '__main__':
-    cursor, connection = connect_db()
-    retrieve_from_db = select_db("end")
-    # for line in retrieve_from_db:
-    #     print(line[0])
-    data = get_last_query()
-    create_event(data)
+    cursor, connection = connect_db()  # connect to DB
+    new_event = get_last_event()  # getting the last event
+    data = get_event_data(new_event)  # get dictionary for all event params
+    service = sync.syncalendar_adn_service(True)  # get the "writing" service from synCalendar
+    create_and_insert(service, data)  # creating event in inserting it to calendar
+    # closing connection after the connect
     connection.commit()
-    connection.close()  # closing connection after the connect
+    connection.close()
 
