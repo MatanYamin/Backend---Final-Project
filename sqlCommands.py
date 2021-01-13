@@ -124,7 +124,7 @@ if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB
     new_event = get_last_event()  # getting the last event
     data = get_event_data(new_event)  # get dictionary for all event params
-    service = sync.syncalendar_adn_service(True)  # get the "writing" service from synCalendar
+    service = sync.syncalendar_and_service()  # get the "writing" service from synCalendar
     create_and_insert(service, data)  # creating event in inserting it to calendar
     # closing connection after the connect
     connection.commit()
