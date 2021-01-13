@@ -1,6 +1,10 @@
 import pymysql
 import connect_database as connect
 import synCalendar as sync
+import email_handler as email
+import datetime
+from time import strftime
+
 
 
 def connect_db():
@@ -28,8 +32,8 @@ def verify_customer(data_event):
         cursor.execute(query)
         times_and_note = cursor.fetchall()
         new_event.append(times_and_note)
-        second_query = "SELECT * FROM ea_users WHERE ID = id1 LIMIT 1;"
-        cursor.execute(second_query)
+        # second_query = "SELECT * FROM ea_users WHERE ID = ? LIMIT 1;"
+        cursor.execute("SELECT * FROM ea_users WHERE ID = %s LIMIT 1", (id1,))
         user_details = cursor.fetchall()
         new_event.append(user_details)
         third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
@@ -97,6 +101,34 @@ def select_db(query):
     return rows
 
 
+
+def get_day(date_list):
+    splitted_dates = date_list.strftime("%d/%m/%Y %H:%M:%S").split(" ")
+    date = splitted_dates[0].split("/")
+    d = int(date[0])
+    m = int(date[1])
+    if m < 10:
+        m = m%10
+    y = int(date[2])
+    day = datetime.datetime(y, m, d).strftime('%A')
+    if day == "Sunday":
+        day = "יום ראשון"
+    elif day == "Monday":
+        day = "יום שני"
+    elif day == "Tuesday":
+        day = "יום שלישי"
+    elif day == "Wednesday":
+        day = "יום רביעי"
+    elif day == "Thursday":
+        day = "יום חמישי"
+    elif day == "Friday":
+        day = "יום שישי"
+    elif day == "Saturday":
+        day = "יום שבת"
+    return day
+
+
+
 def get_event_data(event):
     """get event data and insert to dictionary
     with the right key values"""
@@ -106,17 +138,23 @@ def get_event_data(event):
         for j in i:
             for k in j:
                 list_of_items.append(k)
-    dict["start_time"] = list_of_items[2].isoformat()
-    dict["end_time"] = list_of_items[3].isoformat()
+    dict["day"] = get_day(list_of_items[2])
+    split_time = list_of_items[2].strftime("%d/%m/%y %H:%M").split(" ")
+    dict["number date"] = split_time[0]
+    dict["time"] = split_time[1]
+    dict["start time"] = list_of_items[2].isoformat()
+    dict["end time"] = list_of_items[3].isoformat()
     dict["note"] = list_of_items[4]
-    dict["first_name"] = list_of_items[12]
-    dict["family_name"] = list_of_items[13]
+    dict["first name"] = list_of_items[12]
+    dict["family name"] = list_of_items[13]
+    dict["full name"] = dict["first name"] + " " + dict["family name"]
     dict["email"] = list_of_items[14]
     dict["phone"] = list_of_items[16]
     dict["street"] = list_of_items[17]
     dict["city"] = list_of_items[18]
-    dict["zip_code"] = list_of_items[20]
-    dict["full_address"] = dict["street"] + ', ' + dict["city"] + ', ' + dict["zip_code"]
+    dict["zip code"] = list_of_items[20]
+    dict["service"] = list_of_items[23]
+    dict["full address"] = dict["street"] + ', ' + dict["city"]
     dict["summary"] = "ניקוי עם סקיי-קלינר!"
     return dict
 
@@ -126,14 +164,14 @@ def create_and_insert(service, data):
     creating the event to send to the relevant places"""
     event = {
         'summary': data["summary"],
-        'location': data["full_address"],
+        'location': data["full address"],
         'description': "ניקיון של סקיי קלינר ספות",
         'start': {
-            'dateTime': data["start_time"],
+            'dateTime': data["start time"],
             'timeZone': 'Asia/Jerusalem',
         },
         'end': {
-            'dateTime': data["end_time"],
+            'dateTime': data["end time"],
             'timeZone': 'Asia/Jerusalem',
         },
         'recurrence': [
@@ -141,7 +179,6 @@ def create_and_insert(service, data):
         ],
         'attendees': [
             {'email': data["email"]},
-            {'email': 'sbrin@example.com'},
         ],
         'reminders': {
             'useDefault': False,
@@ -154,6 +191,7 @@ def create_and_insert(service, data):
     # connecting to calendar and insert event
     event = service.events().insert(calendarId='primary', body=event).execute()
     print('Event created: %s' % (event.get('htmlLink')))
+    email.email_handle(data)
 
 
 if __name__ == '__main__':
