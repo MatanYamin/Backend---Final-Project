@@ -1,5 +1,5 @@
 # Backend---Final-Project
-<img src="https://i.ibb.co/WnBBRwt/Sky-cleaner-backend.png" width="500">
+<img src="https://i.ibb.co/WnBBRwt/Sky-cleaner-backend.png" height="190" width="320">
 This part focuses on the beckend side of Sky Cleaner Apoointment system web site, bulid by Matan Yamin.
 
 On this part of the project, there will be designs of the system backend, after schedualing an appointment.
