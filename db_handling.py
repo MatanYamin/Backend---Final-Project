@@ -10,22 +10,54 @@ def connect_db():
     return cursor, connection
 
 
+def verify_customer(data_event):
+    """check if the id of appointment details are match to customer details
+    if not, find the right one"""
+    list_event = []
+    new_event = []
+    for i in data_event:
+        for j in i:
+            for k in j:
+                list_event.append(k)
+    id1 = list_event[8]
+    id2 = list_event[11]
+    if id1 == id2:
+        return data_event
+    else:
+        query = "SELECT * FROM ea_appointments  ORDER BY ID DESC LIMIT 1;"
+        cursor.execute(query)
+        times_and_note = cursor.fetchall()
+        new_event.append(times_and_note)
+        second_query = "SELECT * FROM ea_users WHERE ID = id1 LIMIT 1;"
+        cursor.execute(second_query)
+        user_details = cursor.fetchall()
+        new_event.append(user_details)
+        third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
+        cursor.execute(third_query)
+        service = cursor.fetchall()
+        new_event.append(service)
+        return new_event
+
+
+def insert_data_list(query, data_list):
+    """get query and retrieve data with that query from db"""
+    cursor.execute(query)
+    data_to_fetch = cursor.fetchall()
+    data_list.append(data_to_fetch)
+    return data_list
+
+
 def get_last_event():
     """still need to add a loop that runs all the time"""
+
     data_list = []
-    query = "SELECT * FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
+    query = "SELECT * FROM ea_appointments  ORDER BY ID DESC LIMIT 1;"
+    insert_data_list(query, data_list)
     second_query ="SELECT * FROM ea_users ORDER BY ID DESC LIMIT 1;"
+    insert_data_list(second_query, data_list)
     third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
-    # ********************** check that id is matching! ************************* #
-    cursor.execute(query)
-    times_and_note = cursor.fetchall()
-    data_list.append(times_and_note)
-    cursor.execute(second_query)
-    user_details = cursor.fetchall()
-    data_list.append(user_details)
-    cursor.execute(third_query)
-    service = cursor.fetchall()
-    data_list.append(service)
+    data_list = insert_data_list(third_query, data_list)
+    data_list = verify_customer(data_list)
     return data_list
 
 
@@ -66,6 +98,8 @@ def select_db(query):
 
 
 def get_event_data(event):
+    """get event data and insert to dictionary
+    with the right key values"""
     list_of_items = []
     dict = {}
     for i in event:
@@ -88,7 +122,8 @@ def get_event_data(event):
 
 
 def create_and_insert(service, data):
-
+    """we get here data after inserting to dictionary all parameters
+    creating the event to send to the relevant places"""
     event = {
         'summary': data["summary"],
         'location': data["full_address"],
@@ -116,6 +151,7 @@ def create_and_insert(service, data):
             ],
         },
     }
+    # connecting to calendar and insert event
     event = service.events().insert(calendarId='primary', body=event).execute()
     print('Event created: %s' % (event.get('htmlLink')))
 

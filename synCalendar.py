@@ -7,7 +7,7 @@ import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-import sqlCommands as sql
+import db_handling as sql
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
