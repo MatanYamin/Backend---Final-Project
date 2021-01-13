@@ -17,7 +17,7 @@ def email_handle(data):
     message = MIMEMultipart()
     message['From'] = sender_address
     message['To'] = data["email"]
-    message['Subject'] = 'אישור תור - סקייקלינר'   #The subject line
+    message['Subject'] = 'עוד רגע ואנחנו אצלכם'   #The subject line
     #The body and the attachments for the mail
     message.attach(content_message)
     #Create SMTP session for sending the mail

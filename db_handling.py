@@ -138,10 +138,11 @@ def get_event_data(event):
         for j in i:
             for k in j:
                 list_of_items.append(k)
+    # get the current day of the date
     dict["day"] = get_day(list_of_items[2])
     split_time = list_of_items[2].strftime("%d/%m/%y %H:%M").split(" ")
-    dict["number date"] = split_time[0]
-    dict["time"] = split_time[1]
+    dict["number date"] = split_time[0]  # appointment time
+    dict["time"] = split_time[1]  #
     dict["start time"] = list_of_items[2].isoformat()
     dict["end time"] = list_of_items[3].isoformat()
     dict["note"] = list_of_items[4]
