@@ -61,10 +61,10 @@ def email_content_to_customer(data):
            </head>
           <body> 
             <p style="direction: rtl; text-align: right; font-family:georgia,garamond,serif;font-size:25px;font-style:italic;">שלום """ + data["full name"] + """<br>
-              תודה רבה על זימון פגישה עם סקייקלינר! פרטי התור שלך נמצאים למטה.<br>
-              שעת התור:  <br>&#8986;  """ + data["time"] + """  <br> 
-              ב""" + data["day"] + ", " + data["number date"] + """ <br>  
-               מיקום:  <br>&#128197;  	
+              תודה על זימון הפגישה עם סקייקלינר, עוד קצת ואתם נקיים! הפגישה נקבעה בהצלחה והועברה אל צוות המומחים שלנו!  <br> פרטי התור שלך נמצאים למטה.<br>&#8986;
+              שעת התור:  <br>  """ + data["time"] + """  <br> 
+              ב""" + data["day"] + ", " + data["number date"] + """ <br> &#128197;  
+               מיקום:  <br>  	
               """ + data["full address"] + """ <br>
               &#129532; סוג השירות: <br>
               """ + data["service"] + """
