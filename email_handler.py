@@ -62,15 +62,15 @@ def email_content_to_customer(data):
            </head>
           <body> 
             <p style="direction: rtl; text-align: right; font-family:georgia,garamond,serif;font-size:20px;font-style:italic;">שלום """ + data["full name"] + """<br>
-              תודה על זימון הפגישה עם סקייקלינר, עוד קצת ואתם נקיים! הפגישה נקבעה בהצלחה והועברה אל צוות המומחים שלנו!  <br> פרטי התור שלך נמצאים למטה.<br>&#8986;
+              תודה על זימון הפגישה עם סקייקלינר, עוד קצת ואתם נקיים! הפגישה נקבעה בהצלחה והועברה אל צוות המומחים שלנו!  <br> <br> פרטי התור שלך נמצאים למטה.<br>&#8986;
               מתי?  <br>  """ """
-              ב""" + data["day"] + ", " + data["number date"] + ", " + data["time"] + """ <br> &#128467;  
+              ב""" + data["day"] + ", " + data["number date"] + ", " + data["time"] + """ <br><br> &#128467;  
                איפה?  <br>  	
-              """ + data["full address"] + """ <br>
+              """ + data["full address"] + """ <br><br>
               &#129532; מה אנחנו מנקים? <br>
-              """ + data["service"] + """ <br> 
-              המחיר: """ + data["price"] + """<br>
-              לכל שאלה אפשר לפנות דרך דרך כל אחד מהקישורים שנמצאים למטה. <br>
+              """ + data["service"] + """ <br><br> 
+              המחיר: """ + data["price"] + """<br><br>
+              לכל שאלה אפשר לפנות דרך כל אחד מהקישורים שנמצאים למטה. <br><br>
               מחכים לראותכם, צוות סקאי קלינר. <br>
               <p style="direction: rtl; text-align: center; font-family:georgia,garamond,serif;font-size:25px;font-style:italic;">
               <br> <br>עקבו אחרינו באינסטגרם ובפייסבוק והתעדכנו אחר ההגרלות החדשות! <br <br>
