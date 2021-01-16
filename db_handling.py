@@ -23,11 +23,13 @@ def verify_customer(data_event):
         for j in i:
             for k in j:
                 list_event.append(k)
+
     id1 = list_event[8]
     id2 = list_event[11]
     if id1 == id2:
         return data_event
     else:
+        print("we are in situation")
         query = "SELECT * FROM ea_appointments  ORDER BY ID DESC LIMIT 1;"
         cursor.execute(query)
         times_and_note = cursor.fetchall()
@@ -51,6 +53,13 @@ def insert_data_list(query, data_list):
     return data_list
 
 
+def get_service_by_id(id):
+
+    cursor.execute("SELECT * FROM ea_services WHERE ID = %s LIMIT 1", (id,))
+    service_details = cursor.fetchall()
+    return service_details
+
+
 def get_last_event():
     """still need to add a loop that runs all the time"""
 
@@ -59,8 +68,10 @@ def get_last_event():
     insert_data_list(query, data_list)
     second_query ="SELECT * FROM ea_users ORDER BY ID DESC LIMIT 1;"
     insert_data_list(second_query, data_list)
-    third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
-    data_list = insert_data_list(third_query, data_list)
+    service_details = get_service_by_id(data_list[0][0][9])
+    # third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
+    # data_list = insert_data_list(third_query, data_list)
+    data_list.append(service_details)
     data_list = verify_customer(data_list)
     return data_list
 
@@ -154,9 +165,15 @@ def get_event_data(event):
     dict["street"] = list_of_items[17]
     dict["city"] = list_of_items[18]
     dict["call me"] = list_of_items[20]
-    dict["service"] = list_of_items[23]
+    dict["service"] = list_of_items[24]
+    dict["price"] = str(list_of_items[26]) + " ₪"
     dict["full address"] = dict["street"] + ', ' + dict["city"]
     dict["summary"] = "ניקוי עם סקאי קלינר!"
+    # coun = 0
+    # for j in dict.values():
+    #     print(coun, "->", j)
+    #     coun += 1
+    # input("a")
     return dict
 
 
