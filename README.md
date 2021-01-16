@@ -23,6 +23,10 @@ With "db_handling.py" we will -<br><br>
 &#8226; Let CEO decide about availabilty from his calendar.<br>
 &#8226; Manually able to add an appointment.<br>
 &#8226; SMS sending. <br>
+&#8226; Booking Cancelation. <br>
+&#8226; Reminders. <br>
+&#8226; Run on PM2 instantly. <br>
 
-and more features to come 
+
+and more features to come.
 
