@@ -95,7 +95,7 @@ def email_content_to_customer(data):
             </a>
             &nbsp;
             <a href="tel:054-220-1042" target="_blank">
-            <img src='https://i.pinimg.com/originals/b5/d7/19/b5d7198734ee5174b581630628ecfdd6.png' style='width: 6%;'>
+            <img src='https://simpleicon.com/wp-content/uploads/phone-symbol-1.png' style='width: 6%;'>
             </a>
             &nbsp;
             <a href="https://api.whatsapp.com/send?phone=972542201042&lang=he">
