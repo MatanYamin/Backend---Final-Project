@@ -4,7 +4,7 @@ import synCalendar as sync
 import email_handler as email
 import datetime
 from time import strftime
-
+BOOKING_LIST = []  # read from...
 
 
 def connect_db():
@@ -153,10 +153,10 @@ def get_event_data(event):
     dict["phone"] = list_of_items[16]
     dict["street"] = list_of_items[17]
     dict["city"] = list_of_items[18]
-    dict["zip code"] = list_of_items[20]
+    dict["call me"] = list_of_items[20]
     dict["service"] = list_of_items[23]
     dict["full address"] = dict["street"] + ', ' + dict["city"]
-    dict["summary"] = "ניקוי עם סקיי-קלינר!"
+    dict["summary"] = "ניקוי עם סקאי קלינר!"
     return dict
 
 
@@ -195,13 +195,52 @@ def create_and_insert(service, data):
     email.email_handle(data)
 
 
-if __name__ == '__main__':
+def get_hash():
+    query = "SELECT hash FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
+    cursor.execute(query)
+    hash_to_fetch = cursor.fetchall()
+    return hash_to_fetch
+
+
+
+def check_for_update():
+    """check for new bookings with hash code that we have in the table.
+    if we have that code already, means we dont have any new booking.
+    Do that constantly."""
     cursor, connection = connect_db()  # connect to DB
-    new_event = get_last_event()  # getting the last event
-    data = get_event_data(new_event)  # get dictionary for all event params
-    service = sync.syncalendar_and_service()  # get the "writing" service from synCalendar
-    create_and_insert(service, data)  # creating event in inserting it to calendar
-    # closing connection after the connect
+    hash_code = get_hash()
+    if hash_code in BOOKING_LIST:
+        return False
+    BOOKING_LIST.append(hash_code)
     connection.commit()
     connection.close()
+    return True
+
+
+def main_run():
+    # while 1:
+    if check_for_update():
+        print("check hash: ", BOOKING_LIST)
+        # cursor, connection = connect_db()  # connect to DB
+        new_event = get_last_event()  # getting the last event
+        data = get_event_data(new_event)  # get dictionary for all event params
+        service = sync.syncalendar_and_service()  # get the "writing" service from synCalendar
+        create_and_insert(service, data)  # creating event in inserting it to calendar
+        # closing connection after the connect
+        connection.commit()
+        connection.close()
+
+
+
+if __name__ == '__main__':
+
+    cursor, connection = connect_db()  # connect to DB
+    main_run()
+    # new_event = get_last_event()  # getting the last event
+    # data = get_event_data(new_event)  # get dictionary for all event params
+    # service = sync.syncalendar_and_service()  # get the "writing" service from synCalendar
+    # create_and_insert(service, data)  # creating event in inserting it to calendar
+    # # closing connection after the connect
+    # connection.commit()
+    # connection.close()
 

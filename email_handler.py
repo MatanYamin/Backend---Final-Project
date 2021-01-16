@@ -15,7 +15,7 @@ def email_handle(data):
     message = MIMEMultipart()
     message['From'] = sender_address
     message['To'] = data["email"]
-    message['Subject'] = 'עוד רגע ואנחנו אצלכם'   #The subject line
+    message['Subject'] = 'עוד רגע ואנחנו אצלכם'  # The subject line
     #The body and the attachments for the mail
     message.attach(content_message)
     #Create SMTP session for sending the mail
@@ -27,6 +27,7 @@ def email_handle(data):
     session.quit()
     email_handle_manager(data)
     print('Mail Sent')
+
 
 def email_handle_manager(data):
     content_message = email_content_to_manager(data)
@@ -99,6 +100,8 @@ def email_content_to_customer(data):
 
 
 def email_content_to_manager(data):
+    if not data["note"]:
+        data["note"] = "אין"
     html = """\
             <html dir="RTL">
               <head>
@@ -114,7 +117,9 @@ def email_content_to_manager(data):
                   מספר הטלפון של הלקוח: 
                   <a href="tel:""" + data["phone"] + """">""" + data["phone"] + """</a> <br>
                   מייל של הלקוח: """ + data["email"] + """ <br>
-                  סוג השירות שהוזמן: """ + data["service"] + """ 
+                  סוג השירות שהוזמן: """ + data["service"] + """ <br>
+                  האם להתקשר אליו לפרטים כלשהם? """ + data["call me"] + """ <br<
+                  הערות של הלקוח: """ + data["note"] + """
                 </p>
               </body>
             </html>
