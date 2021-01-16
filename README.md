@@ -18,11 +18,17 @@ Synchronising CEO's calendar with google API and let writing and reading permiss
 
 With "db_handling.py" we will -<br><br>
 &#8226; Constantly get updates from DB and verify new appointment.<br>
+&#8226; Check with hash code about new bookings.<br>
 &#8226; Add new event to CEO calendar and customer calendar.<br>
-&#8226; send Email to customer.<br>
+&#8226; Send confirmation Email to customer.<br>
+&#8226; Send new booking details Email to manager.<br>
 &#8226; Let CEO decide about availabilty from his calendar.<br>
 &#8226; Manually able to add an appointment.<br>
 &#8226; SMS sending. <br>
+&#8226; Booking Cancelation. <br>
+&#8226; Reminders. <br>
+&#8226; Run on PM2 instantly. <br>
 
-and more features to come 
+
+and more features to come.
 
