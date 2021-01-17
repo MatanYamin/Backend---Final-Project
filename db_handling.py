@@ -139,7 +139,6 @@ def get_day(date_list):
     return day
 
 
-
 def get_event_data(event):
     """get event data and insert to dictionary
     with the right key values"""
