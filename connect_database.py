@@ -3,7 +3,7 @@ import mysql.connector as mysql
 
 def connect_db():
     # enter your server IP address/domain name
-    host_ip = 'localhost'  # "3.138.43.76"
+    host_ip = '3.138.43.76'  # "3.138.43.76"
     # database name I want to connect to
     database = "skycleaner"
     # this is the user name I created
