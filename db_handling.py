@@ -37,10 +37,11 @@ def verify_customer(data_event):
         cursor.execute("SELECT * FROM ea_users WHERE ID = %s LIMIT 1", (id1,))
         user_details = cursor.fetchall()
         new_event.append(user_details)
-        third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
-        cursor.execute(third_query)
-        service = cursor.fetchall()
-        new_event.append(service)
+        service_details = get_service_by_id(new_event[0][0][9])
+        # third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
+        # cursor.execute(third_query)
+        # service = cursor.fetchall()
+        new_event.append(service_details)
         return new_event
 
 
@@ -165,6 +166,7 @@ def get_event_data(event):
     dict["call me"] = list_of_items[20]
     dict["service"] = list_of_items[24]
     dict["price"] = str(list_of_items[26]) + " ₪"
+    dict["admin email"] = "matanyamin01@gmail.com"
     dict["full address"] = dict["street"] + ', ' + dict["city"]
     dict["summary"] = "ניקוי עם סקאי קלינר!"
     # coun = 0
@@ -235,7 +237,6 @@ def check_for_update():
 def main_run():
     # while 1:
     if check_for_update():
-        print("check hash: ", BOOKING_LIST)
         # cursor, connection = connect_db()  # connect to DB
         new_event = get_last_event()  # getting the last event
         data = get_event_data(new_event)  # get dictionary for all event params

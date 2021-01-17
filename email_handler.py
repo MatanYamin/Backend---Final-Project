@@ -25,8 +25,9 @@ def email_handle(data):
     text = message.as_string()
     session.sendmail(sender_address, data["email"], text)
     session.quit()
+    print("Customer mail sent")
     email_handle_manager(data)
-    print('Mail Sent')
+    print("all is sent")
 
 
 def email_handle_manager(data):
@@ -39,7 +40,7 @@ def email_handle_manager(data):
     #Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address
-    message['To'] = 'matanyamin01@gmail.com'
+    # message['To'] = 'matanyamin01@gmail.com'
     message['Subject'] = 'זומן תור חדש!'   #The subject line
     #The body and the attachments for the mail
     message.attach(content_message)
@@ -48,9 +49,9 @@ def email_handle_manager(data):
     session.starttls() #enable security
     session.login(sender_address, sender_pass) #login with mail_id and password
     text = message.as_string()
-    session.sendmail(sender_address, data["email"], text)
+    session.sendmail(sender_address, data["admin email"], text)
     session.quit()
-    # print('Mail Sent')
+    print('Admin ail Sent')
 
 
 
@@ -136,6 +137,7 @@ def email_content_to_manager(data):
             </html>
             """
     plain_text = MIMEText(html, 'html')
+
     return plain_text
 
 
