@@ -19,7 +19,7 @@ def email_handle(data):
     #The body and the attachments for the mail
     message.attach(content_message)
     #Create SMTP session for sending the mail
-    session = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
+    session = smtplib.SMTP('smtp.gmail.com', 465) # use gmail with port 587
     session.starttls() #enable security
     session.login(sender_address, sender_pass) #login with mail_id and password
     text = message.as_string()
