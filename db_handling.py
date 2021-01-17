@@ -3,6 +3,7 @@ import synCalendar as sync
 import email_handler as email
 import datetime
 from time import strftime
+import threading
 BOOKING_LIST = []  # read from...
 
 
@@ -213,6 +214,7 @@ def create_and_insert(service, data):
 
 
 def get_hash():
+    connection.commit()
     query = "SELECT hash FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
     cursor.execute(query)
     hash_to_fetch = cursor.fetchall()
@@ -226,8 +228,12 @@ def check_for_update():
     Do that constantly."""
     cursor, connection = connect_db()  # connect to DB
     hash_code = get_hash()
+    # print(hash_code)
     if hash_code in BOOKING_LIST:
+        # print("this is the hash-> ", hash_code)
+        # print("this is the list-> ", BOOKING_LIST)
         return False
+    print("its new hash -> ", hash_code)
     BOOKING_LIST.append(hash_code)
     connection.commit()
     connection.close()
@@ -235,28 +241,22 @@ def check_for_update():
 
 
 def main_run():
-    # while 1:
+    threading.Timer(10.0, main_run).start()
     if check_for_update():
+        print("new booking!")
         # cursor, connection = connect_db()  # connect to DB
         new_event = get_last_event()  # getting the last event
         data = get_event_data(new_event)  # get dictionary for all event params
         service = sync.syncalendar_and_service()  # get the "writing" service from synCalendar
         create_and_insert(service, data)  # creating event in inserting it to calendar
         # closing connection after the connect
-        connection.commit()
-        connection.close()
-
+        # connection.commit()
+        # connection.close()
+    else:
+        print("NO new booking")
 
 
 if __name__ == '__main__':
-
     cursor, connection = connect_db()  # connect to DB
     main_run()
-    # new_event = get_last_event()  # getting the last event
-    # data = get_event_data(new_event)  # get dictionary for all event params
-    # service = sync.syncalendar_and_service()  # get the "writing" service from synCalendar
-    # create_and_insert(service, data)  # creating event in inserting it to calendar
-    # # closing connection after the connect
-    # connection.commit()
-    # connection.close()
 
