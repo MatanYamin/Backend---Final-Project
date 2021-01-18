@@ -1,10 +1,12 @@
+# Program by Matan Yamin - Final Project
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
 def email_handle(data):
-
+    """this function gets an html content and send an Email using SMTP protocol
+    to the customer and to the manager"""
     content_message = email_content_to_customer(data)
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
@@ -31,6 +33,8 @@ def email_handle(data):
 
 
 def email_handle_manager(data):
+    """this function get an html content specially for the manager and send it to him
+    after finding a nwe booking"""
     content_message = email_content_to_manager(data)
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
@@ -56,6 +60,7 @@ def email_handle_manager(data):
 
 
 def email_content_to_customer(data):
+    """this is html content for the customer email"""
     html = """\
         <html dir="RTL">
           <head> <img src="https://i.ibb.co/yh7CyXp/Sky-Cleaner.jpg" width="500">
@@ -112,6 +117,7 @@ def email_content_to_customer(data):
 
 
 def email_content_to_manager(data):
+    """this is an html content for the manager"""
     if not data["note"]:
         data["note"] = "אין"
     html = """\
@@ -137,8 +143,4 @@ def email_content_to_manager(data):
             </html>
             """
     plain_text = MIMEText(html, 'html')
-
     return plain_text
-
-
-# email_handle(data, "yamin2211@gmail.com")

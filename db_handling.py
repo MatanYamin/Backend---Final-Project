@@ -1,3 +1,4 @@
+# Program by Matan Yamin - Final Project
 import connect_database as connect
 import synCalendar as sync
 import email_handler as email
@@ -142,7 +143,8 @@ def get_day(date_list):
 
 def get_event_data(event):
     """get event data and insert to dictionary
-    with the right key values"""
+    with the right key values, later we will use it for event, email and other
+    purposes"""
     list_of_items = []
     dict = {}
     for i in event:
