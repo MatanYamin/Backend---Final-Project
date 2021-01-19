@@ -30,7 +30,7 @@ def verify_customer(data_event):
     if id1 == id2:
         return data_event
     else:
-        print("we are in situation")
+        # print("we are in situation")
         query = "SELECT * FROM ea_appointments  ORDER BY ID DESC LIMIT 1;"
         cursor.execute(query)
         times_and_note = cursor.fetchall()
@@ -235,7 +235,6 @@ def check_for_update():
         # print("this is the hash-> ", hash_code)
         # print("this is the list-> ", BOOKING_LIST)
         return False
-    print("its new hash -> ", hash_code)
     BOOKING_LIST.append(hash_code)
     connection.commit()
     connection.close()
