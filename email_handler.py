@@ -55,7 +55,7 @@ def email_handle_manager(data):
     text = message.as_string()
     session.sendmail(sender_address, data["admin email"], text)
     session.quit()
-    print('Admin ail Sent')
+    print('Admin Mail Sent')
 
 
 

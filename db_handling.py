@@ -223,7 +223,6 @@ def get_hash():
     return hash_to_fetch
 
 
-
 def check_for_update():
     """check for new bookings with hash code that we have in the table.
     if we have that code already, means we dont have any new booking.
@@ -242,7 +241,7 @@ def check_for_update():
 
 
 def main_run():
-    threading.Timer(10.0, main_run).start()
+    threading.Timer(5.0, main_run).start()
     if check_for_update():
         print("new booking!")
         # cursor, connection = connect_db()  # connect to DB
@@ -253,8 +252,8 @@ def main_run():
         # closing connection after the connect
         # connection.commit()
         # connection.close()
-    else:
-        print("NO new booking")
+    # else:
+    #     print("NO new booking")
 
 
 if __name__ == '__main__':
