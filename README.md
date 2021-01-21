@@ -27,6 +27,7 @@ With "db_handling.py" we will -<br><br>
 &#8226; SMS sending. <br>
 &#8226; Booking Cancelation. <br>
 &#8226; Reminders. <br>
+&#8226; Secondary Calendar. <br>
 &#8226; Run on PM2 instantly. <br>
 
 
