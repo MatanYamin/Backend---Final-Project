@@ -7,7 +7,7 @@ from email.mime.text import MIMEText
 def email_handle(data):
     """this function gets an html content and send an Email using SMTP protocol
     to the customer and to the manager"""
-    content_message = email_content_to_customer(data)
+    content_message = email_content_to_customer(data)  # content will hold the HTML content in email
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     #The mail addresses and password
@@ -28,19 +28,19 @@ def email_handle(data):
     session.sendmail(sender_address, data["email"], text)
     session.quit()
     print("Customer mail sent")
-    email_handle_manager(data)
+    email_handle_manager(data)  # after we sent to customer, we will send to manager
     print("all is sent")
 
 
 def email_handle_manager(data):
     """this function get an html content specially for the manager and send it to him
     after finding a nwe booking"""
-    content_message = email_content_to_manager(data)
+    content_message = email_content_to_manager(data)  # containing the manager email content
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     #The mail addresses and password
-    sender_address = 'matanyamin01@gmail.com'
-    sender_pass = 'Beitar$123'
+    sender_address = 'matanyamin01@gmail.com'  # manager email
+    sender_pass = 'Beitar$123'  # password for connecting
     #Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address
@@ -49,9 +49,9 @@ def email_handle_manager(data):
     #The body and the attachments for the mail
     message.attach(content_message)
     #Create SMTP session for sending the mail
-    session = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
+    session = smtplib.SMTP('smtp.gmail.com', 587)  # use gmail with port 587 on SMTP protocol
     session.starttls() #enable security
-    session.login(sender_address, sender_pass) #login with mail_id and password
+    session.login(sender_address, sender_pass) # login with mail_id and password
     text = message.as_string()
     session.sendmail(sender_address, data["admin email"], text)
     session.quit()
@@ -60,7 +60,8 @@ def email_handle_manager(data):
 
 
 def email_content_to_customer(data):
-    """this is html content for the customer email"""
+    """this is html content for the customer email
+    will get some changes in the future"""
     html = """\
         <html dir="RTL">
           <head> <img src="https://i.ibb.co/yh7CyXp/Sky-Cleaner.jpg" width="500">
