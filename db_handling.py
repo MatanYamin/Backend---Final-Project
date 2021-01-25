@@ -9,7 +9,8 @@ BOOKING_LIST = []  # read from...
 
 
 def connect_db():
-    """connects to DB"""
+    """connects to DB, here wer'e connecting to DB using 'connect_database'
+    and ther returning the connection inorder to fetch data"""
     connection = connect.connect_db()
     cursor = connection.cursor()
     return cursor, connection
@@ -20,17 +21,17 @@ def verify_customer(data_event):
     if not, find the right one"""
     list_event = []
     new_event = []
+    # thi loops is fetching the data from db
     for i in data_event:
         for j in i:
             for k in j:
                 list_event.append(k)
-
     id1 = list_event[8]
     id2 = list_event[11]
     if id1 == id2:
         return data_event
+    # in else that means that we need to match the appointment to the same person
     else:
-        # print("we are in situation")
         query = "SELECT * FROM ea_appointments  ORDER BY ID DESC LIMIT 1;"
         cursor.execute(query)
         times_and_note = cursor.fetchall()
@@ -56,7 +57,7 @@ def insert_data_list(query, data_list):
 
 
 def get_service_by_id(id):
-
+    """here were getting the kind of service that the customer chose to use"""
     cursor.execute("SELECT * FROM ea_services WHERE ID = %s LIMIT 1", (id,))
     service_details = cursor.fetchall()
     return service_details
@@ -64,7 +65,6 @@ def get_service_by_id(id):
 
 def get_last_event():
     """still need to add a loop that runs all the time"""
-
     data_list = []
     query = "SELECT * FROM ea_appointments  ORDER BY ID DESC LIMIT 1;"
     insert_data_list(query, data_list)
@@ -92,18 +92,22 @@ def select_db(query):
       cursor.execute(this_query)
       rows += cursor.fetchall()
       id.append()
+    # if we only want email
     elif query == "email":
       this_query += "Select email from ea_appointments;"
       cursor.execute(this_query)
       rows += cursor.fetchall()
+    # if we only want start date
     elif query == "start":
         this_query += "Select start_datetime from ea_appointments;"
         cursor.execute(this_query)
         rows += cursor.fetchall()
+    # if we only want end date
     elif query == "end":
         this_query += "Select end_datetime from ea_appointments;"
         cursor.execute(this_query)
         rows += cursor.fetchall()
+    # if we only want address (getting street and city address)
     elif query == "address":
         this_query += "Select address from ea_appointments;"
         cursor.execute(this_query)
@@ -114,8 +118,8 @@ def select_db(query):
     return rows
 
 
-
 def get_day(date_list):
+    """this function is used to get the exact day in week using strftime"""
     splitted_dates = date_list.strftime("%d/%m/%Y %H:%M:%S").split(" ")
     date = splitted_dates[0].split("/")
     d = int(date[0])
@@ -124,6 +128,7 @@ def get_day(date_list):
         m = m%10
     y = int(date[2])
     day = datetime.datetime(y, m, d).strftime('%A')
+    # here were translating the day to hebrew
     if day == "Sunday":
         day = "יום ראשון"
     elif day == "Monday":
@@ -147,6 +152,7 @@ def get_event_data(event):
     purposes"""
     list_of_items = []
     dict = {}
+    # loop to get data
     for i in event:
         for j in i:
             for k in j:
@@ -172,18 +178,13 @@ def get_event_data(event):
     dict["admin email"] = "matanyamin01@gmail.com"
     dict["full address"] = dict["street"] + ', ' + dict["city"]
     dict["summary"] = "ניקוי עם סקאי קלינר!"
-    # coun = 0
-    # for j in dict.values():
-    #     print(coun, "->", j)
-    #     coun += 1
-    # input("a")
     return dict
 
 
 def create_and_insert(service, data):
     """we get here data after inserting to dictionary all parameters
     creating the event to send to the relevant places"""
-    event = {
+    event = {  # this event will go the manager and customer calendar in phone
         'summary': data["summary"],
         'location': data["full address"],
         'description': "ניקיון של סקיי קלינר ספות",
@@ -216,6 +217,7 @@ def create_and_insert(service, data):
 
 
 def get_hash():
+    """this func is used to verify if the data from DB is new or already there"""
     connection.commit()
     query = "SELECT hash FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
     cursor.execute(query)
@@ -241,7 +243,8 @@ def check_for_update():
 
 
 def main_run():
-    threading.Timer(5.0, main_run).start()
+    """here is the function that start all functions"""
+    threading.Timer(3.0, main_run).start()
     if check_for_update():
         print("new booking!")
         # cursor, connection = connect_db()  # connect to DB
