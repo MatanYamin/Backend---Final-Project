@@ -1,4 +1,4 @@
-# Program by Matan Yamin - Final Project
+# Programmed by Matan Yamin - Final Project
 import connect_database as connect
 import synCalendar as sync
 import email_handler as email
@@ -218,6 +218,7 @@ def create_and_insert(service, data):
 
 def get_hash():
     """this func is used to verify if the data from DB is new or already there"""
+
     connection.commit()
     query = "SELECT hash FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
     cursor.execute(query)
@@ -229,6 +230,7 @@ def check_for_update():
     """check for new bookings with hash code that we have in the table.
     if we have that code already, means we dont have any new booking.
     Do that constantly."""
+
     cursor, connection = connect_db()  # connect to DB
     hash_code = get_hash()
     # print(hash_code)
@@ -244,7 +246,7 @@ def check_for_update():
 
 def main_run():
     """here is the function that start all functions"""
-    threading.Timer(3.0, main_run).start()
+    threading.Timer(4.0, main_run).start()
     if check_for_update():
         print("new booking!")
         # cursor, connection = connect_db()  # connect to DB

@@ -1,4 +1,4 @@
-# Program by Matan Yamin - Final Project
+# Programmed by Matan Yamin - Final Project
 import mysql.connector as mysql
 
 
