@@ -81,7 +81,7 @@ def read_and_print_events(num_of_display):
                                           orderBy='startTime').execute()
     events = events_result.get('items', [])
 
-    if not events:
+    if not events:  # check about events
         print('No upcoming events found.')
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))

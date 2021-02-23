@@ -11,8 +11,8 @@ def email_handle(data):
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     #The mail addresses and password
-    sender_address = 'matanyamin01@gmail.com'
-    sender_pass = 'Beitar$123'
+    sender_address = 'matanyamin01@gmail.com'  # for now, this is my email
+    sender_pass = 'Beitar$123'  # pass
     #Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address
@@ -61,7 +61,8 @@ def email_handle_manager(data):
 
 def email_content_to_customer(data):
     """this is html content for the customer email
-    will get some changes in the future"""
+    will get some changes in the future
+    needs to add more features"""
     html = """\
         <html dir="RTL">
           <head> <img src="https://i.ibb.co/yh7CyXp/Sky-Cleaner.jpg" width="500">
@@ -118,7 +119,7 @@ def email_content_to_customer(data):
 
 
 def email_content_to_manager(data):
-    """this is an html content for the manager"""
+    """this is an html content for the managers"""
     if not data["note"]:
         data["note"] = "אין"
     html = """\
