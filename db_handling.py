@@ -1,4 +1,4 @@
-# Programmed by Matan Yamin - Final Project
+# Programmed by Matan Yamin - Final Project.
 import connect_database as connect
 import synCalendar as sync
 import email_handler as email

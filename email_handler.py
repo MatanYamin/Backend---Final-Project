@@ -1,4 +1,4 @@
-# Programmed by Matan Yamin - Final Project
+# Programmed by Matan Yamin - Final Project.
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

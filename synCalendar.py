@@ -1,4 +1,4 @@
-# Programmed by Matan Yamin - Final Project
+# Programmed by Matan Yamin - Final Project.
 
 from __future__ import print_function
 import datetime
