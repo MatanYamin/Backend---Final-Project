@@ -37,7 +37,6 @@ def syncalendar_and_service():
     service = build('calendar', 'v3', credentials=creds)
     return service
 
-
     # Call the Calendar API
     # read_and_print_events(service, 10)
     # now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time

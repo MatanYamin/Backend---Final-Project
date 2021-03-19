@@ -213,7 +213,7 @@ def create_and_insert(service, data):
     # connecting to calendar and insert event
     event = service.events().insert(calendarId='primary', body=event).execute()
     print('Event created: %s' % (event.get('htmlLink')))
-    email.email_handle(data)
+    # email.email_handle(data)
 
 
 def get_hash():
