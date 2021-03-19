@@ -2,21 +2,24 @@ from flask import Flask
 import flask
 import json
 import requests
+import email_handler as email
+
 
 app = Flask(__name__)
 
 
-@app.route("/", methods=["POST", "GET"])
+@app.route("/", methods=["POST"])
 def home():
-    if flask.request.method == "POST":
-        lis = flask.request.data.decode()
-        y = json.loads(lis)
-        print(y["fullName"])
-        print(y["email"])
-        print(y["fullAddress"])
-    if flask.request.method == "GET":
-        print("this is get")
-    return "Hello, World! My name is Matan Yamin"
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    email.email_handle(values)
+    email_dict = {}  # will hold all email paramaters
+    # email_dict["fullName"] = valus["full"]
+    # print(y["fullName"])
+    # print(y["email"])
+    # print(y["fullAddress"])
+
+
 
 
 if __name__ == "__main__":
