@@ -9,11 +9,11 @@ def create_event_and_insert(service, data):
         'location': data["fullAddress"],
         'description': "ניקיון של סקיי קלינר",
         'start': {
-            'dateTime': "2021-04-21T09:00:00-07:00",
+            'dateTime': data["date"],
             'timeZone': 'Asia/Jerusalem',
         },
         'end': {
-            'dateTime': "2021-04-21T17:00:00-07:00",
+            'dateTime': data["date"],
             'timeZone': 'Asia/Jerusalem',
         },
         'recurrence': [
