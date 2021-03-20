@@ -6,6 +6,7 @@ import email_handler as email
 import synCalendar as sync
 import event_handler as event
 import connect_database as connect
+import db_handling as db
 
 
 def connect_db():
@@ -21,22 +22,20 @@ app = Flask(__name__)
 
 @app.route("/booking", methods=["POST"])
 def home():
-    data_from_api = flask.request.data.decode()
-    values = json.loads(data_from_api)
-    print(values["date"])
-    # for i in values:
-    #     print(i)
+    # cursor, connection = connect_db()
+    data_list = []
+    query = "SELECT * FROM Customers;"
+    db.insert_data_list(query, data_list)
+    print(data_list)
+    ############### OK
+    # data_from_api = flask.request.data.decode()
+    # values = json.loads(data_from_api)
     # email.email_handle(values)
-    values["date"] = handle_time(values["date"], values["hour"])
-    print(values["date"])
-    # time = values["date"].split(":")
-    # print("hour is: ", values["hour"])
-    # time[0] += ":" + values["hour"]
-    # values["date"] = time[0]
-    # print(time[0])
+    # values["date"] = handle_time(values["date"], values["hour"])
     # service = sync.syncalendar_and_service()
     # event.create_event_and_insert(service, values)
     # print("end event")
+    ################ OK
     return 'OK'
 
 
@@ -49,5 +48,5 @@ def handle_time(time, hour):
 
 
 if __name__ == "__main__":
-    # cursor, connection = connect_db()
+    #
     app.run(debug=True)

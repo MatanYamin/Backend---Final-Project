@@ -6,7 +6,7 @@ def connect_db():
     # enter your server IP address/domain name
     host_ip = '3.138.43.76'  # "3.138.43.76"
     # database name I want to connect to
-    database = "skycleaner"
+    database = "SkyCleaner_Final"
     # this is the user name I created
     user_name = "matanym"
     # user password

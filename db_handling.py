@@ -50,6 +50,7 @@ def verify_customer(data_event):
 
 def insert_data_list(query, data_list):
     """get query and retrieve data with that query from db"""
+    cursor, connection = connect_db()
     cursor.execute(query)
     data_to_fetch = cursor.fetchall()
     data_list.append(data_to_fetch)
