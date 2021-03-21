@@ -1,3 +1,0 @@
-
-def check():
-    print("check")
