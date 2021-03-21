@@ -57,26 +57,33 @@ def insert_data_list(query, data_list):
     return data_list
 
 
-def get_service_by_id(id):
-    """here were getting the kind of service that the customer chose to use"""
-    cursor.execute("SELECT * FROM ea_services WHERE ID = %s LIMIT 1", (id,))
-    service_details = cursor.fetchall()
-    return service_details
+def handle_time(time, hour):
+    """change the time format for the event creation"""
+    temp = time.split("T")
+    temp[0] += "T" + hour + ":00"
+    return temp[0]
 
 
-def get_last_event():
-    """still need to add a loop that runs all the time"""
-    data_list = []
-    query = "SELECT * FROM ea_appointments  ORDER BY ID DESC LIMIT 1;"
-    insert_data_list(query, data_list)
-    second_query ="SELECT * FROM ea_users ORDER BY ID DESC LIMIT 1;"
-    insert_data_list(second_query, data_list)
-    service_details = get_service_by_id(data_list[0][0][9])
-    # third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
-    # data_list = insert_data_list(third_query, data_list)
-    data_list.append(service_details)
-    data_list = verify_customer(data_list)
-    return data_list
+# def get_service_by_id(id):
+#     """here were getting the kind of service that the customer chose to use"""
+#     cursor.execute("SELECT * FROM ea_services WHERE ID = %s LIMIT 1", (id,))
+#     service_details = cursor.fetchall()
+#     return service_details
+
+
+# def get_last_event():
+#     """still need to add a loop that runs all the time"""
+#     data_list = []
+#     query = "SELECT * FROM ea_appointments  ORDER BY ID DESC LIMIT 1;"
+#     insert_data_list(query, data_list)
+#     second_query ="SELECT * FROM ea_users ORDER BY ID DESC LIMIT 1;"
+#     insert_data_list(second_query, data_list)
+#     service_details = get_service_by_id(data_list[0][0][9])
+#     # third_query = "SELECT name FROM ea_services ORDER BY ID DESC LIMIT 1;"
+#     # data_list = insert_data_list(third_query, data_list)
+#     data_list.append(service_details)
+#     data_list = verify_customer(data_list)
+#     return data_list
 
 
 def select_db(query):
@@ -217,52 +224,59 @@ def create_and_insert(service, data):
     # email.email_handle(data)
 
 
-def get_hash():
-    """this func is used to verify if the data from DB is new or already there"""
-
-    connection.commit()
-    query = "SELECT hash FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
-    cursor.execute(query)
-    hash_to_fetch = cursor.fetchall()
-    return hash_to_fetch
-
-
-def check_for_update():
-    """check for new bookings with hash code that we have in the table.
-    if we have that code already, means we dont have any new booking.
-    Do that constantly."""
-
-    cursor, connection = connect_db()  # connect to DB
-    hash_code = get_hash()
-    # print(hash_code)
-    if hash_code in BOOKING_LIST:
-        # print("this is the hash-> ", hash_code)
-        # print("this is the list-> ", BOOKING_LIST)
-        return False
-    BOOKING_LIST.append(hash_code)
-    connection.commit()
-    connection.close()
-    return True
+# def get_hash():
+#     """this func is used to verify if the data from DB is new or already there"""
+#
+#     connection.commit()
+#     query = "SELECT hash FROM ea_appointments ORDER BY ID DESC LIMIT 1;"
+#     cursor.execute(query)
+#     hash_to_fetch = cursor.fetchall()
+#     return hash_to_fetch
 
 
-def main_run():
-    """here is the function that start all functions"""
-    threading.Timer(4.0, main_run).start()
-    if check_for_update():
-        print("new booking!")
-        # cursor, connection = connect_db()  # connect to DB
-        new_event = get_last_event()  # getting the last event
-        data = get_event_data(new_event)  # get dictionary for all event params
-        service = sync.syncalendar_and_service()  # get the "writing" service from synCalendar
-        create_and_insert(service, data)  # creating event in inserting it to calendar
-        # closing connection after the connect
-        # connection.commit()
-        # connection.close()
-    # else:
-    #     print("NO new booking")
+# def check_for_update():
+#     """check for new bookings with hash code that we have in the table.
+#     if we have that code already, means we dont have any new booking.
+#     Do that constantly."""
+#
+#     cursor, connection = connect_db()  # connect to DB
+#     hash_code = get_hash()
+#     # print(hash_code)
+#     if hash_code in BOOKING_LIST:
+#         # print("this is the hash-> ", hash_code)
+#         # print("this is the list-> ", BOOKING_LIST)
+#         return False
+#     BOOKING_LIST.append(hash_code)
+#     connection.commit()
+#     connection.close()
+#     return True
+
+
+# def main_run():
+#     """here is the function that start all functions"""
+#     threading.Timer(4.0, main_run).start()
+#     if check_for_update():
+#         print("new booking!")
+#         # cursor, connection = connect_db()  # connect to DB
+#         new_event = get_last_event()  # getting the last event
+#         data = get_event_data(new_event)  # get dictionary for all event params
+#         service = sync.syncalendar_and_service()  # get the "writing" service from synCalendar
+#         create_and_insert(service, data)  # creating event in inserting it to calendar
+#         # closing connection after the connect
+#         # connection.commit()
+#         # connection.close()
+#     # else:
+#     #     print("NO new booking")
+
+
+
+def fetch_all_services(cursor, service):
+    cursor.execute("SELECT Service_Name FROM Services WHERE ID_CAT = %s", (service,))
+    return cursor.fetchall()
 
 
 if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB
-    main_run()
+    fetch_all_services(cursor)
+    # main_run()
 

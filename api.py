@@ -9,43 +9,41 @@ import connect_database as connect
 import db_handling as db
 
 
-def connect_db():
-    """connects to DB, here wer'e connecting to DB using 'connect_database'
-    and ther returning the connection inorder to fetch data"""
-    connection = connect.connect_db()
-    cursor = connection.cursor()
-    return cursor, connection
-
-
+connection = connect.connect_db()
+cursor = connection.cursor()
 app = Flask(__name__)
 
 
 @app.route("/booking", methods=["POST"])
-def home():
+def booking():
     # cursor, connection = connect_db()
-    data_list = []
-    query = "SELECT * FROM Customers;"
-    db.insert_data_list(query, data_list)
-    print(data_list)
-    ############### OK
+    # db.fetch_all_services(cursor, service_name)
+    # data_list = []
+    # query = "SELECT * FROM Customers;"
+    # db.insert_data_list(query, data_list)
     data_from_api = flask.request.data.decode()  # get the body of the request
     values = json.loads(data_from_api)  # convert to jason in order to get the fields
     email.email_handle(values)  # email handler sends emails to customet and manager
-    values["date"] = handle_time(values["date"], values["hour"])  # handle time changes the date
+    values["date"] = db.handle_time(values["date"], values["hour"])  # handle time changes the date
     service = sync.syncalendar_and_service()
     event.create_event_and_insert(service, values)  # create event in the calendar
-    # print("end event")
-    ################ OK
     return 'OK'
 
 
-def handle_time(time, hour):
-    """change the time format for the event creation"""
-    temp = time.split("T")
-    temp[0] += "T" + hour + ":00"
-    return temp[0]
+@app.route("/services", methods=["POST"])  # when we get into the first step, we will want all services displayed
+def service_title():
+    data_from_api = flask.request.data.decode()  # getting the body request
+    values = json.loads(data_from_api)
+    services = db.fetch_all_services(cursor, values["title"])
+    print(services)
+    post_services(services)
+    return 'OK'
+
+
+def post_services(services):
+    """will post some services to the dropdown"""
+    pass
 
 
 if __name__ == "__main__":
-    #
     app.run(debug=True)
