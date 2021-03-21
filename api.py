@@ -28,23 +28,22 @@ def home():
     db.insert_data_list(query, data_list)
     print(data_list)
     ############### OK
-    # data_from_api = flask.request.data.decode()
-    # values = json.loads(data_from_api)
-    # email.email_handle(values)
-    # values["date"] = handle_time(values["date"], values["hour"])
-    # service = sync.syncalendar_and_service()
-    # event.create_event_and_insert(service, values)
+    data_from_api = flask.request.data.decode()  # get the body of the request
+    values = json.loads(data_from_api)  # convert to jason in order to get the fields
+    email.email_handle(values)  # email handler sends emails to customet and manager
+    values["date"] = handle_time(values["date"], values["hour"])  # handle time changes the date
+    service = sync.syncalendar_and_service()
+    event.create_event_and_insert(service, values)  # create event in the calendar
     # print("end event")
     ################ OK
     return 'OK'
 
 
 def handle_time(time, hour):
+    """change the time format for the event creation"""
     temp = time.split("T")
     temp[0] += "T" + hour + ":00"
-
     return temp[0]
-
 
 
 if __name__ == "__main__":
