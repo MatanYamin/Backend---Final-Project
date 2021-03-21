@@ -17,6 +17,7 @@ the DB is sitting on AWS servers. &#9989; <br>
 Synchronising CEO's calendar with google API and let writing and reading permissions with "synCalendar.py" &#9989; <br>
 
 With "db_handling.py" we will -<br><br>
+Working with Flask server and able to get POST, GET, PUT and DELETE requests <br/>
 &#8226; Constantly get updates from DB and verify new appointment.<br>
 &#8226; Check with hash code about new bookings.<br>
 &#8226; Google synchronization: add new event to admin's calendar and customer's calendar with book details.<br>
@@ -27,9 +28,6 @@ With "db_handling.py" we will -<br><br>
 &#8226; SMS sending. <br>
 &#8226; Booking Cancelation. <br>
 &#8226; Reminders. <br>
-&#8226; Secondary Calendar. <br>
-&#8226; Run on PM2 instantly. <br>
-
 
 and more features to come.
 
