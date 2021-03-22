@@ -34,15 +34,11 @@ def booking():
 def service_title():
     data_from_api = flask.request.data.decode()  # getting the body request
     values = json.loads(data_from_api)
-    services = db.fetch_all_services(cursor, values["title"])
-    print(services)
-    post_services(services)
-    return 'OK'
+    services = db.fetch_all_services(cursor, values['title'])
+    return flask.jsonify(services)
+    # post_services(services)  # this will send the data to the api
+    # return 'OK'
 
-
-def post_services(services):
-    """will post some services to the dropdown"""
-    pass
 
 
 if __name__ == "__main__":

@@ -269,10 +269,24 @@ def create_and_insert(service, data):
 #     #     print("NO new booking")
 
 
-
 def fetch_all_services(cursor, service):
     cursor.execute("SELECT Service_Name FROM Services WHERE ID_CAT = %s", (service,))
-    return cursor.fetchall()
+    service_vals = []
+    for i in cursor.fetchall():
+        service_vals.append(i[0])
+    return service_vals
+
+
+def fetch_all_addons(cursor, addon):
+    """get addon data for a specific service"""
+    addons_vals = []
+    cursor.execute("SELECT Addon_Name FROM Addons WHERE ID_SER = %s", (addon,))
+    for i in cursor.fetchall():
+        addons_vals.append(i[0])
+
+    print(addons_vals)
+    # return addons_vals
+
 
 
 if __name__ == '__main__':
