@@ -16,11 +16,6 @@ app = Flask(__name__)
 
 @app.route("/booking", methods=["POST"])
 def booking():
-    # cursor, connection = connect_db()
-    # db.fetch_all_services(cursor, service_name)
-    # data_list = []
-    # query = "SELECT * FROM Customers;"
-    # db.insert_data_list(query, data_list)
     data_from_api = flask.request.data.decode()  # get the body of the request
     values = json.loads(data_from_api)  # convert to jason in order to get the fields
     email.email_handle(values)  # email handler sends emails to customet and manager
@@ -36,9 +31,30 @@ def service_title():
     values = json.loads(data_from_api)
     services = db.fetch_all_services(cursor, values['title'])
     return flask.jsonify(services)
-    # post_services(services)  # this will send the data to the api
-    # return 'OK'
 
+
+@app.route("/addon", methods=["POST"])
+def addons_title():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    addons = db.fetch_all_addons(cursor, values['add'])
+    return flask.jsonify(addons)
+
+
+@app.route("/prices", methods=["POST"])
+def prices():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    price = db.get_service_price(cursor, values["prices"])
+    return flask.jsonify(price)
+
+
+@app.route("/prices/addon", methods=["POST"])
+def addon_price():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    price = db.get_addons_price(cursor, values["addon"])
+    return flask.jsonify(price)
 
 
 if __name__ == "__main__":
