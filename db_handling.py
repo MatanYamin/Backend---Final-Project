@@ -1,6 +1,8 @@
 # Programmed by Matan Yamin - Final Project.
 import connect_database as connect
 from datetime import datetime, timedelta
+# import datetime
+import calendar
 # Here will bee all the functions that are fetching data from the DB and will handle changes
 
 
@@ -22,21 +24,15 @@ def handle_time(time, hour):
     str_date = str(modified_date)
     splited = str_date.split(" ")
     splited[0] += "T" + hour + ":00"
-    print(splited[0])
+    # print(splited[0])
     return splited[0]
 
 
-def get_day(date_list):
-    """this function is used to get the exact day in week using strftime"""
-    splitted_dates = date_list.strftime("%d/%m/%Y %H:%M:%S").split(" ")
-    date = splitted_dates[0].split("/")
-    d = int(date[0])
-    m = int(date[1])
-    if m < 10:
-        m = m%10
-    y = int(date[2])
-    day = datetime.datetime(y, m, d).strftime('%A')
-    # here were translating the day to hebrew
+def findDay(date):
+    date = date.split("T")
+    day_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    day = datetime.strptime(date[0], '%Y-%m-%d').weekday()
+    day = day_name[day]
     if day == "Sunday":
         day = "יום ראשון"
     elif day == "Monday":
@@ -68,7 +64,7 @@ def fetch_all_addons(cursor, addon):
     cursor.execute("SELECT Addon_Name FROM Addons WHERE ID_SER = %s", (addon,))
     for i in cursor.fetchall():
         addons_vals.append(i[0])
-    print(addons_vals)
+    # print(addons_vals)
     return addons_vals
 
 

@@ -67,20 +67,20 @@ def email_content_to_customer(data):
     needs to add more features"""
     html = """\
         <html dir="RTL">
-          <head> <img src="https://i.ibb.co/yh7CyXp/Sky-Cleaner.jpg" width="500">
+          <head> <img src="https://i.ibb.co/yh7CyXp/Sky-Cleaner.jpg" width="200">
            <meta charset="utf-8">
            </head>
           <body> 
             <p style="direction: rtl; text-align: right; font-family:georgia,garamond,serif;font-size:20px;font-style:italic;">שלום """ + \
            data["fullName"] + """<br>
               תודה על זימון הפגישה עם סקייקלינר, עוד קצת ואתם נקיים! הפגישה נקבעה בהצלחה והועברה אל צוות המומחים שלנו!  <br> <br> פרטי התור שלך נמצאים למטה.<br>&#8986;
-              מתי?  <br>  """ """
-              ב""" """ <br><br> &#128467;  
+            מתי? ב """ + data["day"] + """ <br>
+              בשעה """ + data["hour"] + """ <br><br> &#128467;  
                איפה?  <br>  	
               """ + data["fullAddress"] + """ <br><br>
               &#129532; מה אנחנו מנקים? <br>
               """ + data["service"] + """ <br><br> 
-              המחיר: """ """<br><br>
+              """ + data["price"] + """
               הערות: """ + data["comments"] + """ <br/><br/>
               לכל שאלה אפשר לפנות דרך כל אחד מהקישורים שנמצאים למטה. <br><br>
               מחכים לראותכם, צוות סקאי קלינר. <br>
@@ -127,6 +127,8 @@ def email_content_to_manager(data):
     """this is an html content for the managers"""
     if not data["comments"]:
         data["comments"] = "אין"
+    if not data["addons"]:
+        data["addons"] = "אין"
     html = """\
             <html dir="RTL">
               <head>
@@ -137,15 +139,16 @@ def email_content_to_manager(data):
                  שם הלקוח: """ + \
            data["fullName"] + """<br>
                   כתובת: <br> """ + data["fullAddress"] + """ <br>
-                  בשעה: """ """ <br>
-                  ב""" """ <br>
+                  תאריך: """ + data["day"] + """
+                  בשעה: """ + data["hour"] + """ <br>
                   מספר הטלפון של הלקוח: 
                   <a href="tel:""" + data["phone"] + """">""" + data["phone"] + """</a> <br>
                   מייל של הלקוח: """ + data["email"] + """ <br>
                   סוג השירות שהוזמן: """ + data["service"] + """ <br> 
                   תוספות: """ + data["addons"] + """ <br> 
                   הערות של הלקוח: """ +  data["comments"] + """ <br>
-                  המחיר: """ """ <br>
+                  """ + data["price"] + """
+                   <br>
                 </p>
               </body>
             </html>

@@ -7,6 +7,7 @@ import synCalendar as sync
 import event_handler as event
 import connect_database as connect
 import db_handling as db
+import calendar
 
 
 connection = connect.connect_db()
@@ -18,6 +19,8 @@ app = Flask(__name__)
 def booking():
     data_from_api = flask.request.data.decode()  # get the body of the request
     values = json.loads(data_from_api)  # convert to jason in order to get the fields
+    print(values["price"])
+    values["day"] = db.findDay(values["date"]) + ": " + values["date"].split("T")[0]
     email.email_handle(values)  # email handler sends emails to customet and manager
     values["date"] = db.handle_time(values["date"], values["hour"])  # handle time changes the date
     service = sync.syncalendar_and_service()
