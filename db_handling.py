@@ -20,10 +20,14 @@ def day_plus_one(day):
     return splited[0]
 
 
-def handle_time(time, hour):
+def handle_time(cursor, mydb, time, hour):
     """changing the time format for the event creation"""
     temp = time.split("T")
     new_day = day_plus_one(temp[0])
+    sql = "INSERT INTO Available_Dates (day_id, Hour) VALUES (%s, %s)"
+    val = (new_day, hour,)
+    cursor.execute(sql, val)
+    mydb.commit()
     new_day += "T" + hour + ":00"
     return new_day
 
@@ -163,6 +167,21 @@ def get_all_disabled_dates(cursor):
     for i in cursor.fetchall():
         disabled.append(i[0])
     return disabled
+
+
+def get_hours_for_day(cursor, day):
+    """get hours for specific day"""
+    hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
+    day_hours = []
+    # this is the hours that are taken
+    cursor.execute("SELECT Hour FROM Available_Dates WHERE day_id = %s", (day,))
+    for i in cursor.fetchall():
+        print("this is i -> ", i)
+        day_hours.append(i[0])
+    for i in day_hours:
+        if i in hours:
+            hours.remove(i)
+    return hours
 
 
 if __name__ == '__main__':

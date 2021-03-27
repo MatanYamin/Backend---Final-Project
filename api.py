@@ -19,7 +19,7 @@ def booking():
     values = json.loads(data_from_api)  # convert to jason in order to get the fields
     values["day"] = db.findDay(values["date"]) + ": " + values["date"].split("T")[0]
     email.email_handle(values)  # email handler sends emails to customet and manager
-    values["date"] = db.handle_time(values["date"], values["hour"])  # handle time changes the date
+    values["date"] = db.handle_time(cursor, connection, values["date"], values["hour"])  # handle time changes the date
     service = sync.syncalendar_and_service()
     event.create_event_and_insert(service, values)  # create event in the calendar
     return 'OK'
@@ -126,11 +126,22 @@ def disable_date():
     return "ok"
 
 
+# will get all days to be disable from DB
 @app.route("/get/disabledate", methods=["GET"])
 def get_disable_dates():
     disabled_days = db.get_all_disabled_dates(cursor)
-    print(disabled_days)
     return flask.jsonify(disabled_days)
+
+
+# will get a day and return the available hours for that day
+@app.route("/post/hours", methods=["POST"])
+def get_hours_for_day():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    day = values["date"].split("T")
+    new_day = db.day_plus_one(day[0])
+    hours = db.get_hours_for_day(cursor, new_day)
+    return flask.jsonify(hours)
 
 
 if __name__ == "__main__":
