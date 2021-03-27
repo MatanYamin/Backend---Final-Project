@@ -11,15 +11,21 @@ def connect_db():
     return cursor, connection
 
 
-def handle_time(time, hour):
-    """changing the time format for the event creation"""
-    temp = time.split("T")
-    date = datetime.strptime(temp[0], "%Y-%m-%d")
+def day_plus_one(day):
+    """increment day by 1"""
+    date = datetime.strptime(day, "%Y-%m-%d")
     modified_date = date + timedelta(days=1)
     str_date = str(modified_date)
     splited = str_date.split(" ")
-    splited[0] += "T" + hour + ":00"
     return splited[0]
+
+
+def handle_time(time, hour):
+    """changing the time format for the event creation"""
+    temp = time.split("T")
+    new_day = day_plus_one(temp[0])
+    new_day += "T" + hour + ":00"
+    return new_day
 
 
 def findDay(date):
@@ -141,6 +147,22 @@ def delete_addon(cursor, mydb, addon):
     val = (addon,)
     cursor.execute(sql, val)
     mydb.commit()
+
+
+def add_date_to_be_disable(cursor, mydb, day):
+    """adding date to be disabled to the DB"""
+    sql = "INSERT INTO Disabled_Dates (Day) VALUES (%s)"
+    val = (day, )
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
+def get_all_disabled_dates(cursor):
+    cursor.execute("SELECT Day FROM Disabled_Dates;")
+    disabled = []
+    for i in cursor.fetchall():
+        disabled.append(i[0])
+    return disabled
 
 
 if __name__ == '__main__':

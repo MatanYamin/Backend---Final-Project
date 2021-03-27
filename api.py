@@ -115,5 +115,23 @@ def addon_price():
     return flask.jsonify(price)
 
 
+# this date will be exclude from calendar
+@app.route("/put/disabledate", methods=["PUT"])
+def disable_date():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    day = values["date"].split("T")
+    new_day = db.day_plus_one(day[0])
+    db.add_date_to_be_disable(cursor, connection, new_day)
+    return "ok"
+
+
+@app.route("/get/disabledate", methods=["GET"])
+def get_disable_dates():
+    disabled_days = db.get_all_disabled_dates(cursor)
+    print(disabled_days)
+    return flask.jsonify(disabled_days)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
