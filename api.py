@@ -155,6 +155,17 @@ def get_hours_for_day():
     return flask.jsonify(hours)
 
 
+# will block hour for giving services
+@app.route("/post/newhours", methods=["POST"])
+def block_hour():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    day = values["date"].split("T")
+    new_day = db.day_plus_one(day[0])
+    hours = db.block_hour(cursor, connection, new_day, values["hour"])
+    return flask.jsonify(hours)
+
+
 @app.route("/get/cities", methods=["GET"])
 def get_all_cities():
     cities = db.get_all_cities(cursor)

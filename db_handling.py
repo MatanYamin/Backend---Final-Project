@@ -32,6 +32,13 @@ def handle_time(cursor, mydb, time, hour):
     return new_day
 
 
+def block_hour(cursor, mydb, date, hour):
+    sql = "INSERT INTO Available_Dates (day_id, Hour) VALUES (%s, %s)"
+    val = (date, hour,)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
 def findDay(date):
     """Get the week day from a certain date and translate it to hebrew"""
     date = date.split("T")
