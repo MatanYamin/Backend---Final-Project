@@ -1,6 +1,7 @@
 # Programmed by Matan Yamin - Final Project.
 import connect_database as connect
 from datetime import datetime, timedelta
+from ivsort import ivsort
 
 
 def connect_db():
@@ -202,7 +203,8 @@ def get_all_cities(cursor):
     cities = []
     for i in cursor.fetchall():
         cities.append(i[0])
-    return cities
+    sorted__hebrew_list = ivsort(cities)
+    return sorted__hebrew_list
 
 
 def add_city(cursor, mydb, city):
