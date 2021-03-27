@@ -161,6 +161,13 @@ def add_date_to_be_disable(cursor, mydb, day):
     mydb.commit()
 
 
+def delete_disabled_date(cursor, mydb, day):
+    sql = "DELETE FROM Disabled_Dates WHERE Day = %s"
+    val = (day,)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
 def get_all_disabled_dates(cursor):
     cursor.execute("SELECT Day FROM Disabled_Dates;")
     disabled = []
@@ -176,12 +183,33 @@ def get_hours_for_day(cursor, day):
     # this is the hours that are taken
     cursor.execute("SELECT Hour FROM Available_Dates WHERE day_id = %s", (day,))
     for i in cursor.fetchall():
-        print("this is i -> ", i)
         day_hours.append(i[0])
     for i in day_hours:
         if i in hours:
             hours.remove(i)
     return hours
+
+
+def get_all_cities(cursor):
+    cursor.execute("SELECT City FROM Cities;")
+    cities = []
+    for i in cursor.fetchall():
+        cities.append(i[0])
+    return cities
+
+
+def add_city(cursor, mydb, city):
+    sql = "INSERT INTO Cities (City) VALUES (%s)"
+    val = (city,)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
+def delete_city(cursor, mydb, city):
+    sql = "DELETE FROM Cities WHERE City = %s"
+    val = (city,)
+    cursor.execute(sql, val)
+    mydb.commit()
 
 
 if __name__ == '__main__':

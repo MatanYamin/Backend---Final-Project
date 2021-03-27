@@ -126,6 +126,17 @@ def disable_date():
     return "ok"
 
 
+# this date will be exclude from calendar
+@app.route("/delete/activatedate", methods=["DELETE"])
+def activate_date():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    day = values["date"].split("T")
+    new_day = db.day_plus_one(day[0])
+    db.delete_disabled_date(cursor, connection, new_day)
+    return "ok"
+
+
 # will get all days to be disable from DB
 @app.route("/get/disabledate", methods=["GET"])
 def get_disable_dates():
@@ -142,6 +153,29 @@ def get_hours_for_day():
     new_day = db.day_plus_one(day[0])
     hours = db.get_hours_for_day(cursor, new_day)
     return flask.jsonify(hours)
+
+
+@app.route("/get/cities", methods=["GET"])
+def get_all_cities():
+    cities = db.get_all_cities(cursor)
+    return flask.jsonify(cities)
+
+
+@app.route("/post/city", methods=["POST"])
+def add_city():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.add_city(cursor, connection, values["city"])
+    return "ok"
+
+
+@app.route("/delete/city", methods=["DELETE"])
+def delete_city():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.delete_city(cursor, connection, values["city"])
+    return "ok"
+
 
 
 if __name__ == "__main__":
