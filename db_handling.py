@@ -40,6 +40,9 @@ def block_hour(cursor, mydb, date, hour):
     mydb.commit()
 
 
+
+
+
 def findDay(date):
     """Get the week day from a certain date and translate it to hebrew"""
     date = date.split("T")
@@ -235,6 +238,53 @@ def edit_addon_price(cursor, mydb, price, addon):
     mydb.commit()
 
 
+def get_values(cursor, mydb, values):
+    """will get all values from the booking and add it to DB"""
+    hold_data = {}
+    hold_data["full_name"] = values["fullName"]
+    hold_data["email"] = values["email"]
+    hold_data["phone"] = values["phone"]
+    hold_data["address"] = values["fullAddress"]
+    hold_data["service"] = values["service"] + " " + values["addons"]
+    hold_data["date"] = day_plus_one(values["date"].split("T")[0])
+    hold_data["hour"] = values["hour"]
+    hold_data["price"] = values["price"]
+    hold_data["comments"] = values["comments"]
+    add_new_booking(cursor, mydb, hold_data)
+
+
+# will add the booking details to "Customers" table in DB
+def add_new_booking(cursor, mydb, data):
+    sql = "INSERT INTO Customers (Full_Name, Email, Phone, Address, Service, Date, Hour, Price, Comments) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    val = (data["full_name"], data["email"], data["phone"], data["address"], data["service"], data["date"], data["hour"], data["price"], data["comments"], )
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
+# gett all customers details from db
+def get_all_customers(cursor):
+    cursor.execute("SELECT * FROM Customers;")
+    customers = []
+    for i in cursor.fetchall():
+        customers.append(list(i))
+    return customers
+
+
+def unblock_hour(cursor, mydb, data):
+    cursor.execute("DELETE FROM Available_Dates WHERE day_id = %s AND Hour = %s", (data["day"], data["hour"]))
+    mydb.commit()
+
+
+def delete_booking(cursor, mydb, data):
+    """deleting a service from admin panel"""
+    sql = "DELETE FROM Customers WHERE id = %s"
+    val = (data["id"],)
+    cursor.execute(sql, val)
+    # mydb.commit()
+    unblock_hour(cursor, mydb, data)
+
+
 if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB
+    get_all_customers(cursor)
 

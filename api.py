@@ -17,6 +17,7 @@ app = Flask(__name__)
 def booking():
     data_from_api = flask.request.data.decode()  # get the body of the request
     values = json.loads(data_from_api)  # convert to jason in order to get the fields
+    db.get_values(cursor, connection, values)
     new_day = db.day_plus_one(values["date"].split("T")[0])
     values["day"] = db.findDay(values["date"]) + ": " + new_day
     email.email_handle(values)  # email handler sends emails to customet and manager
@@ -203,6 +204,23 @@ def edit_addon_price():
     values = json.loads(data_from_api)
     db.edit_addon_price(cursor, connection, values["price"], values["addon"])
     return flask.jsonify(values["price"])
+
+
+@app.route("/get/customers", methods=["GET"])
+def get_all_customers():
+    customers = db.get_all_customers(cursor)
+    return flask.jsonify(customers)
+
+
+@app.route("/delete/booking", methods=["DELETE"])
+def delete_booking():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.delete_booking(cursor, connection, values)
+    return "ok"
+
+
+
 
 
 if __name__ == "__main__":
