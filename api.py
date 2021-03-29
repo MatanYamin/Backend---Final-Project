@@ -17,7 +17,8 @@ app = Flask(__name__)
 def booking():
     data_from_api = flask.request.data.decode()  # get the body of the request
     values = json.loads(data_from_api)  # convert to jason in order to get the fields
-    values["day"] = db.findDay(values["date"]) + ": " + values["date"].split("T")[0]
+    new_day = db.day_plus_one(values["date"].split("T")[0])
+    values["day"] = db.findDay(values["date"]) + ": " + new_day
     email.email_handle(values)  # email handler sends emails to customet and manager
     values["date"] = db.handle_time(cursor, connection, values["date"], values["hour"])  # handle time changes the date
     service = sync.syncalendar_and_service()
@@ -187,6 +188,21 @@ def delete_city():
     db.delete_city(cursor, connection, values["city"])
     return "ok"
 
+
+@app.route("/put/service_price", methods=["PUT"])
+def edit_service_price():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.edit_service_price(cursor, connection, values["price"], values["service"])
+    return flask.jsonify(values["price"])
+
+
+@app.route("/put/addon_price", methods=["PUT"])
+def edit_addon_price():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.edit_addon_price(cursor, connection, values["price"], values["addon"])
+    return flask.jsonify(values["price"])
 
 
 if __name__ == "__main__":

@@ -221,6 +221,20 @@ def delete_city(cursor, mydb, city):
     mydb.commit()
 
 
+def edit_service_price(cursor, mydb, price, service):
+    sql = "UPDATE Services SET Service_Price = %s WHERE Service_Name = %s"
+    val = (price, service)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
+def edit_addon_price(cursor, mydb, price, addon):
+    sql = "UPDATE Addons SET Addon_Price = %s WHERE Addon_Name = %s"
+    val = (price, addon)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
 if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB
 

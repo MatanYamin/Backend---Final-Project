@@ -65,9 +65,10 @@ def email_content_to_customer(data):
     """this is html content for the customer email
     will get some changes in the future
     needs to add more features"""
+    # <img src="https://i.ibb.co/yh7CyXp/Sky-Cleaner.jpg" width="200">
     html = """\
         <html dir="RTL">
-          <head> <img src="https://i.ibb.co/yh7CyXp/Sky-Cleaner.jpg" width="200">
+          <head> 
            <meta charset="utf-8">
            </head>
           <body> 
@@ -80,7 +81,7 @@ def email_content_to_customer(data):
               """ + data["fullAddress"] + """ <br><br>
               &#129532; מה אנחנו מנקים? <br>
               """ + data["service"] + """ <br><br> 
-              """ + data["price"] + """
+              """ + data["price"] + """ <br/>
               הערות: """ + data["comments"] + """ <br/><br/>
               לכל שאלה אפשר לפנות דרך כל אחד מהקישורים שנמצאים למטה. <br><br>
               מחכים לראותכם, צוות סקאי קלינר. <br>
@@ -93,23 +94,23 @@ def email_content_to_customer(data):
             <a href="https://www.facebook.com/SkyCleanerIsrael">
             <img src='https://purpleironingservices.com/wp-content/uploads/2017/02/facebook-footer-share.png' style='width: 6%;'>
             </a>
-            &nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="https://www.instagram.com/skycleaner1/">
             <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png' style='width: 6%;'>
             </a>
-            &nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="https://easy.co.il/page/10080031">
             <img src='https://play-lh.googleusercontent.com/LaVRvqc6Hxy2EQj8G6-qsuOUz66Q5GZBOhAOs6n7YjsaopFbQwjDhYqurw_RS5grRQ' style='width: 6%;'>
             </a>
-            &nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="mailto:skycleanerisrael@gmail.com">
             <img src='https://image.flaticon.com/icons/png/512/281/281769.png' style='width: 6%;'>
             </a>
-            &nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="tel:054-220-1042" target="_blank">
             <img src='https://simpleicon.com/wp-content/uploads/phone-symbol-1.png' style='width: 6%;'>
             </a>
-            &nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="https://api.whatsapp.com/send?phone=972542201042&lang=he">
             <img src='https://cdn2.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-whatsapp-circle-512.png' style='width: 6%;'>
             </a>
