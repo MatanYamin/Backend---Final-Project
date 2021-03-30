@@ -216,11 +216,18 @@ def get_all_customers():
 def delete_booking():
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    db.delete_booking(cursor, connection, values)
+    db.delete_booking_and_unblock_hour(cursor, connection, values)
     return "ok"
 
 
-
+# send feedback mail to customer after service
+@app.route("/post/feedback", methods=["POST"])
+def send_feedback():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    email.handle_feedback(values)
+    # db.delete_booking_only(cursor, connection, values["id"])
+    return 'ok'
 
 
 if __name__ == "__main__":

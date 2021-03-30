@@ -30,7 +30,7 @@ def email_handle(data):
     print("Customer mail sent")
     email_handle_manager(data)  # after we sent to customer, we will send to manager
     print("all is sent")
-    return "all is sent"
+    # return "all is sent"
 
 
 def email_handle_manager(data):
@@ -57,10 +57,10 @@ def email_handle_manager(data):
     session.sendmail(sender_address, "matanyamin01@gmail.com", text)
     session.quit()
     print('Admin Mail Sent')
-    return 'Admin Mail Sent'
+    # return 'Admin Mail Sent'
 
 
-# NEW FOR NOW
+# content of email that will be send after booking to customer
 def email_content_to_customer(data):
     """this is html content for the customer email
     will get some changes in the future
@@ -123,7 +123,7 @@ def email_content_to_customer(data):
     return plain_text
 
 
-# NEW FOR NOW
+# content of email that will be send after booking to manager
 def email_content_to_manager(data):
     """this is an html content for the managers"""
     if not data["comments"]:
@@ -156,3 +156,78 @@ def email_content_to_manager(data):
             """
     plain_text = MIMEText(html, 'html')
     return plain_text
+
+
+# content of email that will be send after cleaning to customer
+def email_feedback_content(data):
+    html = """\
+           <html dir="RTL">
+             <head> 
+              <meta charset="utf-8">
+              </head>
+             <body> 
+               <p style="direction: rtl; text-align: right; font-family:georgia,garamond,serif;font-size:20px;font-style:italic;">שלום """ + \
+           data["fullName"] + """<br>
+                 סיימנו את הניקוי  <br> <br> פרטי התור שלך נמצאים למטה.<br>;
+              רצינו לדעת איך היה
+             <footer style="direction: rtl; text-align: center;">
+
+               <a href="https://www.facebook.com/SkyCleanerIsrael">
+               <img src='https://purpleironingservices.com/wp-content/uploads/2017/02/facebook-footer-share.png' style='width: 6%;'>
+               </a>
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <a href="https://www.instagram.com/skycleaner1/">
+               <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png' style='width: 6%;'>
+               </a>
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <a href="https://easy.co.il/page/10080031">
+               <img src='https://play-lh.googleusercontent.com/LaVRvqc6Hxy2EQj8G6-qsuOUz66Q5GZBOhAOs6n7YjsaopFbQwjDhYqurw_RS5grRQ' style='width: 6%;'>
+               </a>
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <a href="mailto:skycleanerisrael@gmail.com">
+               <img src='https://image.flaticon.com/icons/png/512/281/281769.png' style='width: 6%;'>
+               </a>
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <a href="tel:054-220-1042" target="_blank">
+               <img src='https://simpleicon.com/wp-content/uploads/phone-symbol-1.png' style='width: 6%;'>
+               </a>
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <a href="https://api.whatsapp.com/send?phone=972542201042&lang=he">
+               <img src='https://cdn2.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-whatsapp-circle-512.png' style='width: 6%;'>
+               </a>
+               </footer>
+
+             </body>
+           </html>
+           """
+    plain_text = MIMEText(html, 'html')
+    return plain_text
+
+
+def handle_feedback(data):
+    """this function gets an html content and send an Email using SMTP protocol
+        to the customer and to the manager"""
+    content_message = email_feedback_content(data)  # content will hold the HTML content in email
+    # mail_content = "Hello, This is a simple mail. There is only text," \
+    #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
+    # The mail addresses and password
+    sender_address = 'matanyamin01@gmail.com'  # for now, this is my email
+    sender_pass = 'Beitar$123'  # pass
+    # Setup the MIME
+    message = MIMEMultipart()
+    message['From'] = sender_address
+    message['To'] = data["email"]
+    message['Subject'] = 'תודה שהייתם איתנו'  # The subject line
+    # The body and the attachments for the mail
+    message.attach(content_message)
+    # Create SMTP session for sending the mail
+    session = smtplib.SMTP('smtp.gmail.com', 587)  # use gmail with port 587
+    session.starttls()  # enable security
+    session.login(sender_address, sender_pass)  # login with mail_id and password
+    text = message.as_string()
+    session.sendmail(sender_address, data["email"], text)
+    session.quit()
+    # print("Customer mail sent")
+    # email_handle_manager(data)  # after we sent to customer, we will send to manager
+    # print("all is sent")
+    # return "all is sent"

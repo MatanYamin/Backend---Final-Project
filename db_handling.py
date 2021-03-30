@@ -275,13 +275,21 @@ def unblock_hour(cursor, mydb, data):
     mydb.commit()
 
 
-def delete_booking(cursor, mydb, data):
+def delete_booking_and_unblock_hour(cursor, mydb, data):
     """deleting a service from admin panel"""
     sql = "DELETE FROM Customers WHERE id = %s"
     val = (data["id"],)
     cursor.execute(sql, val)
     # mydb.commit()
     unblock_hour(cursor, mydb, data)
+
+
+def delete_booking_only(cursor, mydb, id):
+    """will delete booking only"""
+    sql = "DELETE FROM Customers WHERE id = %s"
+    val = (id,)
+    cursor.execute(sql, val)
+    mydb.commit()
 
 
 if __name__ == '__main__':
