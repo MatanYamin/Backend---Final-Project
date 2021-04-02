@@ -40,9 +40,6 @@ def block_hour(cursor, mydb, date, hour):
     mydb.commit()
 
 
-
-
-
 def findDay(date):
     """Get the week day from a certain date and translate it to hebrew"""
     date = date.split("T")
@@ -66,13 +63,21 @@ def findDay(date):
     return day
 
 
-def get_category_services(cursor, service):
+def get_service_by_category(cursor, service):
     """getting all services for specific category"""
     cursor.execute("SELECT Service_Name FROM Services WHERE ID_CAT = %s", (service,))
     service_vals = []
     for i in cursor.fetchall():
         service_vals.append(i[0])
     return service_vals
+
+
+# def get_description_for_service(cursor, service):
+#     cursor.execute("SELECT Service_Description FROM Services WHERE ID_CAT = %s", (service,))
+#     desc = []
+#     for i in cursor.fetchall():
+#         desc.append(i[0])
+#     return desc
 
 
 def get_all_addons_by_service(cursor, service):
@@ -93,13 +98,15 @@ def get_all_addons(cursor):
     return addons
 
 
-def get_service_price(cursor, service):
+def get_service_price_and_description(cursor, service):
     """get price for a specific service"""
-    cursor.execute("SELECT Service_Price FROM Services WHERE ID_SER = %s", (service,))
+    cursor.execute("SELECT Service_Price, Service_Description FROM Services WHERE ID_SER = %s", (service,))
     prices = []
+    dits = []
     for i in cursor.fetchall():
         prices.append(i[0])
-    return prices
+        dits.append(i[1])
+    return prices, dits
 
 
 def get_addon_price(cursor, addon):
@@ -131,8 +138,8 @@ def get_all_services(cursor):
 
 def add_new_service(cursor, mydb, data):
     """Adding new service from Admin panel, including price and category ID"""
-    sql = "INSERT INTO Services (ID_CAT, ID_SER, Service_Name, Service_Price) VALUES (%s, %s, %s, %s)"
-    val = (data["cat_name"], data["service_name"], data["service_name"], data["price"], )
+    sql = "INSERT INTO Services (ID_CAT, ID_SER, Service_Name, Service_Description, Service_Price) VALUES (%s, %s, %s, %s, %s)"
+    val = (data["cat_name"], data["service_name"], data["service_name"], data["description"], data["price"], )
     cursor.execute(sql, val)
     mydb.commit()
 
@@ -231,6 +238,14 @@ def edit_service_price(cursor, mydb, price, service):
     mydb.commit()
 
 
+def edit_description_for_service(cursor, mydb, desc, service):
+    """will change description for service"""
+    sql = "UPDATE Services SET Service_Description = %s WHERE Service_Name = %s"
+    val = (desc, service)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
 def edit_addon_price(cursor, mydb, price, addon):
     sql = "UPDATE Addons SET Addon_Price = %s WHERE Addon_Name = %s"
     val = (price, addon)
@@ -290,6 +305,9 @@ def delete_booking_only(cursor, mydb, id):
     val = (id,)
     cursor.execute(sql, val)
     mydb.commit()
+
+
+
 
 
 if __name__ == '__main__':

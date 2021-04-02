@@ -32,7 +32,7 @@ def booking():
 def get_service_by_category():
     data_from_api = flask.request.data.decode()  # getting the body request
     values = json.loads(data_from_api)
-    services = db.get_category_services(cursor, values['title'])
+    services = db.get_service_by_category(cursor, values['title'])
     return flask.jsonify(services)
 
 
@@ -102,11 +102,11 @@ def addons_title():
 
 # get price for service
 @app.route("/prices", methods=["POST"])
-def prices():
+def price_and_details():
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    price = db.get_service_price(cursor, values["prices"])
-    return flask.jsonify(price)
+    price, dits = db.get_service_price_and_description(cursor, values["prices"])
+    return flask.jsonify(price, dits)
 
 
 @app.route("/prices/addon", methods=["POST"])
@@ -227,6 +227,15 @@ def send_feedback():
     values = json.loads(data_from_api)
     email.handle_feedback(values)
     # db.delete_booking_only(cursor, connection, values["id"])
+    return 'ok'
+
+
+# send feedback mail to customer after service
+@app.route("/put/service_description", methods=["PUT"])
+def edit_description_for_service():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.edit_description_for_service(cursor, connection, values["description"], values["service"])
     return 'ok'
 
 
