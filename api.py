@@ -109,6 +109,15 @@ def price_and_details():
     return flask.jsonify(price, dits)
 
 
+# get price for service
+@app.route("/admin/prices", methods=["POST"])
+def get_service_price():
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    price = db.get_service_price(cursor, values["prices"])
+    return flask.jsonify(price)
+
+
 @app.route("/prices/addon", methods=["POST"])
 def addon_price():
     data_from_api = flask.request.data.decode()

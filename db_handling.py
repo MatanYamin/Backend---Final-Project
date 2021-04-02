@@ -109,6 +109,15 @@ def get_service_price_and_description(cursor, service):
     return prices, dits
 
 
+def get_service_price(cursor, service):
+    """get price for a specific service"""
+    cursor.execute("SELECT Service_Price FROM Services WHERE ID_SER = %s", (service,))
+    prices = []
+    for i in cursor.fetchall():
+        prices.append(i[0])
+    return prices
+
+
 def get_addon_price(cursor, addon):
     """get price for a specific addon"""
     cursor.execute("SELECT Addon_Price FROM Addons WHERE ID_ADD = %s", (addon,))
