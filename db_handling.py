@@ -2,6 +2,10 @@
 import connect_database as connect
 from datetime import datetime, timedelta
 from ivsort import ivsort
+import PIL.Image
+import base64
+import io
+from PIL import Image
 
 
 def connect_db():
@@ -316,10 +320,49 @@ def delete_booking_only(cursor, mydb, id):
     mydb.commit()
 
 
+def convertToBinaryData(filename):
+    # Convert digital data to binary format
+    with open(filename, 'rb') as file:
+        blobData = file.read()
+    return blobData
 
+#
+# def insert_image(cursor, mydb, txt):
+#    עובד
+#     with open('C:/Users/matan/Desktop/NOW/M.Y.P.jpeg', 'rb') as stream:
+#         blob = stream.read()
+#         cursor.execute("INSERT INTO Images (ID_SER, Image) VALUES(%s, %s)", (txt, blob))
+#     mydb.commit()
+
+
+
+# def insert_image(cursor, mydb, service, img):
+#     blob = img.read()
+#     cursor.execute("INSERT INTO Images (ID_SER, Image) VALUES(%s, %s)", (service, blob))
+#     mydb.commit()
+
+
+
+def read_image(cursor):
+    sql1 = 'select Image from Images'
+    cursor.execute(sql1)
+    data2 = cursor.fetchall()
+    file_like2 = io.BytesIO(data2[0][0])
+    img1 = Image.open(file_like2)
+    img1.show()
+
+
+def read_image_text(img):
+    data2 = img
+    file_like2 = io.BytesIO(data2)
+    img1 = Image.open(file_like2)
+    img1.show()
 
 
 if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB
-    get_all_customers(cursor)
+    # insert_image(cursor, connection, "מורן")
+    # read_image(cursor)
+    # print("OK!")
+    # get_all_customers(cursor)
 

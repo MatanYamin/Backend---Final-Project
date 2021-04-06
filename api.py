@@ -6,6 +6,11 @@ import synCalendar as sync
 import event_handler as event
 import connect_database as connect
 import db_handling as db
+import requests
+import io
+import urllib.request as urllib
+from PIL import Image
+from urllib.request import urlopen
 
 
 connection = connect.connect_db()
@@ -183,6 +188,11 @@ def get_all_cities():
     return flask.jsonify(cities)
 
 
+@app.route("/get/gal", methods=["GET"])
+def gettt():
+    return 90000
+
+
 @app.route("/post/city", methods=["POST"])
 def add_city():
     data_from_api = flask.request.data.decode()
@@ -248,5 +258,12 @@ def edit_description_for_service():
     return 'ok'
 
 
+# # posting new image in DB
+# @app.route("/post/images", methods=["POST"])
+# def add_image():
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="3.138.43.76", port=8080)
+    # app.run(debug=True)
+    # app.run(host="0.0.0.0")

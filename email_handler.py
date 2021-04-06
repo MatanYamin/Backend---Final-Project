@@ -81,6 +81,7 @@ def email_content_to_customer(data):
               """ + data["fullAddress"] + """ <br><br>
               &#129532; מה אנחנו מנקים? <br>
               """ + data["service"] + """ <br><br> 
+              מחיר:
               """ + data["price"] + """ <br/>
               הערות: """ + data["comments"] + """ <br/><br/>
               לכל שאלה אפשר לפנות דרך כל אחד מהקישורים שנמצאים למטה. <br><br>
@@ -148,6 +149,7 @@ def email_content_to_manager(data):
                   סוג השירות שהוזמן: """ + data["service"] + """ <br> 
                   תוספות: """ + data["addons"] + """ <br> 
                   הערות של הלקוח: """ +  data["comments"] + """ <br>
+                  מחיר:
                   """ + data["price"] + """
                    <br>
                 </p>
