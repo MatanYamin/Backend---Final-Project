@@ -190,7 +190,7 @@ def get_all_cities():
 
 @app.route("/get/gal", methods=["GET"])
 def gettt():
-    return 90000
+    return "9000"
 
 
 @app.route("/post/city", methods=["POST"])
@@ -264,6 +264,6 @@ def edit_description_for_service():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="3.138.43.76", port=8080)
-    # app.run(debug=True)
-    # app.run(host="0.0.0.0")
+    # app.run(debug=True, host="3.138.43.76", port=8080)
+    app.run(debug=True)
+    # app.run(host="0.0.0.0", port=8000)
