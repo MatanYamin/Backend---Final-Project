@@ -110,8 +110,8 @@ def addons_title():
 def price_and_details():
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    price, dits = db.get_service_price_and_description(cursor, values["prices"])
-    return flask.jsonify(price, dits)
+    price, dits, images = db.get_service_price_and_description(cursor, values["service"])
+    return flask.jsonify(price, dits, images)
 
 
 # get price for service
@@ -258,13 +258,24 @@ def edit_description_for_service():
     return 'ok'
 
 
-# # posting new image in DB
-# @app.route("/post/images", methods=["POST"])
-# def add_image():
+# posting new image in DB
+@app.route("/post/images", methods=["POST"])
+def add_image():
+    print("im here")
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.add_img_url(cursor, connection, values["service"], values["image"])
+    return 'ok'
+
+
+# @app.route("/get/images", methods=["GET"])
+# def get_all_customers():
+#     images = db.get(cursor)
+#     return flask.jsonify(customers)
 
 
 if __name__ == "__main__":
     # app.run(debug=True, host="3.138.43.76", port=8080)
-    # app.run(debug=True)
-    app.run(host='0.0.0.0')
+    app.run(debug=True)
+    # app.run(host='0.0.0.0')
     # app.run(host="0.0.0.0", port=80)

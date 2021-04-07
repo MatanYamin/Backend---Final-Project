@@ -110,7 +110,11 @@ def get_service_price_and_description(cursor, service):
     for i in cursor.fetchall():
         prices.append(i[0])
         dits.append(i[1])
-    return prices, dits
+    cursor.execute("SELECT image_url FROM Images WHERE ID_SER = %s", (service,))
+    images = []
+    for i in cursor.fetchall():
+        images.append(i[0])
+    return prices, dits, images
 
 
 def get_service_price(cursor, service):
@@ -320,11 +324,11 @@ def delete_booking_only(cursor, mydb, id):
     mydb.commit()
 
 
-def convertToBinaryData(filename):
-    # Convert digital data to binary format
-    with open(filename, 'rb') as file:
-        blobData = file.read()
-    return blobData
+# def convertToBinaryData(filename):
+#     # Convert digital data to binary format
+#     with open(filename, 'rb') as file:
+#         blobData = file.read()
+#     return blobData
 
 #
 # def insert_image(cursor, mydb, txt):
@@ -343,20 +347,36 @@ def convertToBinaryData(filename):
 
 
 
-def read_image(cursor):
-    sql1 = 'select Image from Images'
-    cursor.execute(sql1)
-    data2 = cursor.fetchall()
-    file_like2 = io.BytesIO(data2[0][0])
-    img1 = Image.open(file_like2)
-    img1.show()
+# def read_image(cursor):
+#     sql1 = 'select Image from Images'
+#     cursor.execute(sql1)
+#     data2 = cursor.fetchall()
+#     file_like2 = io.BytesIO(data2[0][0])
+#     img1 = Image.open(file_like2)
+#     img1.show()
+#
+#
+# def read_image_text(img):
+#     data2 = img
+#     file_like2 = io.BytesIO(data2)
+#     img1 = Image.open(file_like2)
+#     img1.show()
 
 
-def read_image_text(img):
-    data2 = img
-    file_like2 = io.BytesIO(data2)
-    img1 = Image.open(file_like2)
-    img1.show()
+def add_img_url(cursor, mydb, service, img):
+    sql = "INSERT INTO Images (ID_SER, image_url) VALUES (%s, %s)"
+    val = (service, img)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
+def get_images_for_service(cursor, mydb, service):
+    images = []
+    cursor.execute("SELECT image_rl FROM Images WHERE ID_SER = %s", (service,))
+    for i in cursor.fetchall():
+        images.append(i[0])
+    mydb.commit()
+    return images
 
 
 if __name__ == '__main__':

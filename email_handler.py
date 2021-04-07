@@ -152,6 +152,7 @@ def email_content_to_manager(data):
                   מחיר:
                   """ + data["price"] + """
                    <br>
+                    <img src=""" + data["image"] + """ style='width: 50%;' <br/>
                 </p>
               </body>
             </html>
