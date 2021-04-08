@@ -184,8 +184,8 @@ def get_all_cities():
     return flask.jsonify(cities)
 
 
-@app.route("/get/gal", methods=["GET"])
-def gettt():
+@app.route("http://3.138.43.76/get/this", methods=["GET"])
+def get_something():
     return "9000"
 
 
