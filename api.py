@@ -277,5 +277,5 @@ def add_image():
 if __name__ == "__main__":
     # app.run(debug=True, host="3.138.43.76", port=8080)
     # app.run(debug=True)
-    app.run(host='3.138.43.76', port=8080)
-    # app.run(host="0.0.0.0", port=80)
+    # app.run(host='3.138.43.76', port=8080)
+    app.run(host="0.0.0.0")
