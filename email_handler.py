@@ -12,7 +12,6 @@ def email_handle(data):
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     #The mail addresses and password
     sender_address = 'matanyamin01@gmail.com'  # for now, this is my email
-    sender_pass = 'Beitar$123'  # pass
     #Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address
@@ -41,7 +40,6 @@ def email_handle_manager(data):
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     #The mail addresses and password
     sender_address = 'matanyamin01@gmail.com'  # manager email
-    sender_pass = 'Beitar$123'  # password for connecting
     #Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address
@@ -152,6 +150,7 @@ def email_content_to_manager(data):
                   מחיר:
                   """ + data["price"] + """
                    <br>
+                   התמונה שהלקוח שלח: <br>
                     <img src=""" + data["image"] + """ style='width: 50%;' <br/>
                 </p>
               </body>
@@ -215,7 +214,6 @@ def handle_feedback(data):
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     # The mail addresses and password
     sender_address = 'matanyamin01@gmail.com'  # for now, this is my email
-    sender_pass = 'Beitar$123'  # pass
     # Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address

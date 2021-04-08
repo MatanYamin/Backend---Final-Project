@@ -6,11 +6,7 @@ import synCalendar as sync
 import event_handler as event
 import connect_database as connect
 import db_handling as db
-import requests
-import io
-import urllib.request as urllib
-from PIL import Image
-from urllib.request import urlopen
+
 
 
 connection = connect.connect_db()
@@ -262,10 +258,14 @@ def edit_description_for_service():
 @app.route("/post/images", methods=["POST"])
 def add_image():
     print("im here")
-    data_from_api = flask.request.data.decode()
-    values = json.loads(data_from_api)
-    db.add_img_url(cursor, connection, values["service"], values["image"])
-    return 'ok'
+    try:
+        data_from_api = flask.request.data.decode()
+        values = json.loads(data_from_api)
+        db.add_img_url(cursor, connection, values["service"], values["image"])
+        return flask.jsonify("הכל בסדק")
+
+    except:
+        return 'משהו השתבש, רענן ונסה שוב'
 
 
 # @app.route("/get/images", methods=["GET"])
