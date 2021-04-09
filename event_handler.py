@@ -33,5 +33,4 @@ def create_event_and_insert(service, data):
     # connecting to calendar and insert event
     event = service.events().insert(calendarId='primary', body=event).execute()
     print('Event created: %s' % (event.get('htmlLink')))
-    print("event is done")
-    return "event is done"
+    # return "event is done"

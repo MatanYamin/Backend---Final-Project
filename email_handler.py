@@ -2,6 +2,7 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import config as cn
 
 
 def email_handle(data):
@@ -11,7 +12,8 @@ def email_handle(data):
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     #The mail addresses and password
-    sender_address = 'matanyamin01@gmail.com'  # for now, this is my email
+    sender_address = cn.email_manager()  # for now, this is my email
+    sender_pass = cn.email_manager_pass()
     #Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address
@@ -39,11 +41,10 @@ def email_handle_manager(data):
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     #The mail addresses and password
-    sender_address = 'matanyamin01@gmail.com'  # manager email
-    #Setup the MIME
+    sender_address = cn.email_manager()  # for now, this is my email
+    sender_pass = cn.email_manager_pass()
     message = MIMEMultipart()
     message['From'] = sender_address
-    # message['To'] = 'matanyamin01@gmail.com'
     message['Subject'] = 'זומן תור חדש!'   #The subject line
     #The body and the attachments for the mail
     message.attach(content_message)
@@ -52,7 +53,7 @@ def email_handle_manager(data):
     session.starttls() #enable security
     session.login(sender_address, sender_pass) # login with mail_id and password
     text = message.as_string()
-    session.sendmail(sender_address, "matanyamin01@gmail.com", text)
+    session.sendmail(sender_address, cn.email_manager(), text)
     session.quit()
     print('Admin Mail Sent')
     # return 'Admin Mail Sent'
@@ -213,7 +214,8 @@ def handle_feedback(data):
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     # The mail addresses and password
-    sender_address = 'matanyamin01@gmail.com'  # for now, this is my email
+    sender_address = cn.email_manager()  # for now, this is my email
+    sender_pass = cn.email_manager_pass()
     # Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address
