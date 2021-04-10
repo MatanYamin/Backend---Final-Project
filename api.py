@@ -7,6 +7,11 @@ import event_handler as event
 import connect_database as connect
 import db_handling as db
 from flask_cors import CORS, cross_origin
+from OpenSSL import SSL
+context = SSL.Context(SSL.PROTOCOL_TLSv1_2)
+context.use_privatekey_file('server.key')
+context.use_certificate_file('server.crt')
+
 
 connection = connect.connect_db()
 cursor = connection.cursor()
@@ -309,6 +314,7 @@ if __name__ == "__main__":
     # app.run(debug=True, host="3.138.43.76", port=8080)
     # CORS(app)
     # app.run(debug=True)
-    app.run(ssl_context='adhoc')
+    # app.run(ssl_context='adhoc')
+    app.run(host='0.0.0.0', debug=True, ssl_context=context)
     # app.run(host='3.138.43.76', port=8080)
     # app.run(host="0.0.0.0", port=8080)
