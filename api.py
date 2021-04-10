@@ -11,7 +11,7 @@ from flask_cors import CORS, cross_origin
 connection = connect.connect_db()
 cursor = connection.cursor()
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 
 
 @app.route("/booking", methods=["POST"])
