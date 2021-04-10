@@ -11,7 +11,7 @@ from flask_cors import CORS, cross_origin
 connection = connect.connect_db()
 cursor = connection.cursor()
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
 
 @app.route("/booking", methods=["POST"])
@@ -305,7 +305,7 @@ def add_image():
 
 if __name__ == "__main__":
     # app.run(debug=True, host="3.138.43.76", port=8080)
-    # CORS(app)
+    CORS(app)
     app.run(debug=True)
     # app.run(host='3.138.43.76', port=8080)
     # app.run(host="0.0.0.0", port=8080)
