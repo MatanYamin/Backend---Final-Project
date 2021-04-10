@@ -248,7 +248,7 @@ def edit_addon_price():
 
 
 @app.route("/get/customers", methods=["GET"])
-@cross_origin()
+# @cross_origin()
 def get_all_customers():
     customers = db.get_all_customers(cursor)
     return flask.jsonify(customers)
