@@ -11,8 +11,8 @@ from flask_cors import CORS, cross_origin
 connection = connect.connect_db()
 cursor = connection.cursor()
 app = Flask(__name__)
-cors = CORS(app, resources={r"/foo": {"origins": "*"}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+# cors = CORS(app, resources={r"/foo": {"origins": "*"}})
+# app.config['CORS_HEADERS'] = 'Content-Type'
 # CORS(app)
 
 
@@ -248,7 +248,7 @@ def edit_addon_price():
 
 
 @app.route("/get/customers", methods=["GET"])
-@cross_origin(origin='*',headers=['Content- Type','Authorization'])
+@cross_origin()
 def get_all_customers():
     customers = db.get_all_customers(cursor)
     return flask.jsonify(customers)
