@@ -11,6 +11,7 @@ from flask_cors import CORS, cross_origin
 connection = connect.connect_db()
 cursor = connection.cursor()
 app = Flask(__name__)
+cors = CORS(app, resources={r"/foo": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 # CORS(app)
 
