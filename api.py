@@ -38,7 +38,7 @@ def booking():
 def get_service_by_category():
     data_from_api = flask.request.data.decode()  # getting the body request
     values = json.loads(data_from_api)
-    services = db.get_service_by_category(cursor, values['title'])
+    services = db.get_service_by_category(cursor, connection, values['title'])
     return flask.jsonify(services)
 
 
@@ -46,7 +46,7 @@ def get_service_by_category():
 @app.route("/get/categories", methods=["GET"])
 @cross_origin()
 def get_all_categories():
-    categories = db.get_all_categories(cursor)
+    categories = db.get_all_categories(cursor, connection)
     return flask.jsonify(categories)
 
 
@@ -64,7 +64,7 @@ def add_new_service():
 @app.route("/get/addons", methods=["GET"])
 @cross_origin()
 def get_all_addons():
-    addons = db.get_all_addons(cursor)
+    addons = db.get_all_addons(cursor, connection)
     return flask.jsonify(addons)
 
 
@@ -82,7 +82,7 @@ def delete_addon():
 @app.route("/get/services", methods=["GET"])
 @cross_origin()
 def get_services():
-    services = db.get_all_services(cursor)
+    services = db.get_all_services(cursor, connection)
     return flask.jsonify(services)
 
 
@@ -110,7 +110,7 @@ def delete_service():
 def addons_title():
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    addons = db.get_all_addons_by_service(cursor, values['add'])
+    addons = db.get_all_addons_by_service(cursor, connection, values['add'])
     return flask.jsonify(addons)
 
 
@@ -120,7 +120,7 @@ def addons_title():
 def price_and_details():
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    price, dits, images = db.get_service_price_and_description(cursor, values["service"])
+    price, dits, images = db.get_service_price_and_description(cursor, connection, values["service"])
     return flask.jsonify(price, dits, images)
 
 
@@ -130,7 +130,7 @@ def price_and_details():
 def get_service_price():
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    price = db.get_service_price(cursor, values["prices"])
+    price = db.get_service_price(cursor, connection, values["prices"])
     return flask.jsonify(price)
 
 
@@ -139,7 +139,7 @@ def get_service_price():
 def addon_price():
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    price = db.get_addon_price(cursor, values["addon"])
+    price = db.get_addon_price(cursor, connection, values["addon"])
     return flask.jsonify(price)
 
 
@@ -171,7 +171,7 @@ def activate_date():
 @app.route("/get/disabledate", methods=["GET"])
 @cross_origin()
 def get_disable_dates():
-    disabled_days = db.get_all_disabled_dates(cursor)
+    disabled_days = db.get_all_disabled_dates(cursor, connection)
     return flask.jsonify(disabled_days)
 
 
@@ -289,21 +289,15 @@ def edit_description_for_service():
 @app.route("/post/images", methods=["POST"])
 @cross_origin()
 def add_image():
-    print("im here")
     try:
         data_from_api = flask.request.data.decode()
         values = json.loads(data_from_api)
         db.add_img_to_service(cursor, connection, values["service"], values["image"])
-        return flask.jsonify("הכל בסדק")
+        return 'OK'
 
     except:
         return 'משהו השתבש, רענן ונסה שוב'
 
-
-# @app.route("/get/images", methods=["GET"])
-# def get_all_customers():
-#     images = db.get(cursor)
-#     return flask.jsonify(customers)
 
 
 if __name__ == "__main__":

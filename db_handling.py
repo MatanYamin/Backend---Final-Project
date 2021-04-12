@@ -1,21 +1,6 @@
 # Programmed by Matan Yamin - Final Project.
 import connect_database as connect
 from datetime import datetime, timedelta
-from ivsort import ivsort
-
-
-# def read_from_text(cur, db):
-#     f = open('C:/Users/matan/Desktop/NOW/new.txt', 'r')
-#     cit = f.read().split("\n")
-#     asd = 0
-#     for i in cit:
-#         sql = "INSERT INTO Cities (City) VALUES (%s)"
-#         val = (i,)
-#         cur.execute(sql, val)
-#         asd += 1
-#         print(asd)
-#     db.commit()
-
 
 
 def connect_db():
@@ -27,7 +12,7 @@ def connect_db():
 
 
 def day_plus_one(day):
-    """increment day by 1"""
+    """increment day by 1 because that the calendar input is returning 1 day before"""
     date = datetime.strptime(day, "%Y-%m-%d")
     modified_date = date + timedelta(days=1)
     str_date = str(modified_date)
@@ -48,6 +33,7 @@ def handle_time(cursor, mydb, time, hour):
 
 
 def block_hour(cursor, mydb, date, hour):
+    """this func gets a specific hour from admin and block it to the calendar"""
     sql = "INSERT INTO Available_Dates (day_id, Hour) VALUES (%s, %s)"
     val = (date, hour,)
     cursor.execute(sql, val)
@@ -77,42 +63,37 @@ def findDay(date):
     return day
 
 
-def get_service_by_category(cursor, service):
+def get_service_by_category(cursor, mydb, service):
     """getting all services for specific category"""
     cursor.execute("SELECT Service_Name FROM Services WHERE ID_CAT = %s", (service,))
     service_vals = []
     for i in cursor.fetchall():
         service_vals.append(i[0])
+    mydb.commit()
     return service_vals
 
 
-# def get_description_for_service(cursor, service):
-#     cursor.execute("SELECT Service_Description FROM Services WHERE ID_CAT = %s", (service,))
-#     desc = []
-#     for i in cursor.fetchall():
-#         desc.append(i[0])
-#     return desc
-
-
-def get_all_addons_by_service(cursor, service):
+def get_all_addons_by_service(cursor, mydb, service):
     """get addon data for a specific service"""
     addons_vals = []
     cursor.execute("SELECT Addon_Name FROM Addons WHERE ID_SER = %s", (service,))
     for i in cursor.fetchall():
         addons_vals.append(i[0])
+    mydb.commit()
     return addons_vals
 
 
-def get_all_addons(cursor):
+def get_all_addons(cursor, mydb):
     """fet all addons from DB"""
     addons = []
     cursor.execute("SELECT Addon_Name FROM Addons;")
     for i in cursor.fetchall():
         addons.append(i[0])
+    mydb.commit()
     return addons
 
 
-def get_service_price_and_description(cursor, service):
+def get_service_price_and_description(cursor, mydb, service):
     """get price for a specific service"""
     cursor.execute("SELECT Service_Price, Service_Description FROM Services WHERE ID_SER = %s", (service,))
     prices = []
@@ -124,42 +105,47 @@ def get_service_price_and_description(cursor, service):
     images = []
     for i in cursor.fetchall():
         images.append(i[0])
+    mydb.commit()
     return prices, dits, images
 
 
-def get_service_price(cursor, service):
+def get_service_price(cursor, mydb, service):
     """get price for a specific service"""
     cursor.execute("SELECT Service_Price FROM Services WHERE ID_SER = %s", (service,))
     prices = []
     for i in cursor.fetchall():
         prices.append(i[0])
+    mydb.commit()
     return prices
 
 
-def get_addon_price(cursor, addon):
+def get_addon_price(cursor, mydb, addon):
     """get price for a specific addon"""
     cursor.execute("SELECT Addon_Price FROM Addons WHERE ID_ADD = %s", (addon,))
     prices = []
     for i in cursor.fetchall():
         prices.append(i[0])
+    mydb.commit()
     return prices
 
 
-def get_all_categories(cursor):
+def get_all_categories(cursor, mydb):
     """get all the categories"""
     cursor.execute("SELECT Cat_Name FROM Categories;")
     categories = []
     for i in cursor.fetchall():
         categories.append(i[0])
+    mydb.commit()
     return categories
 
 
-def get_all_services(cursor):
+def get_all_services(cursor, mydb):
     """get all the services"""
     cursor.execute("SELECT Service_name FROM Services;")
     services = []
     for i in cursor.fetchall():
         services.append(i[0])
+    mydb.commit()
     return services
 
 
@@ -209,23 +195,28 @@ def add_date_to_be_disable(cursor, mydb, day):
 
 
 def delete_disabled_date(cursor, mydb, day):
+    """this func realeases a disabled date and delete it from the db"""
     sql = "DELETE FROM Disabled_Dates WHERE Day = %s"
     val = (day,)
     cursor.execute(sql, val)
     mydb.commit()
 
 
-def get_all_disabled_dates(cursor):
+def get_all_disabled_dates(cursor, mydb):
+    """this func returns all dates that are disabled for work by the manager
+       later, the calendar will read those hours and block them for everyone"""
     cursor.execute("SELECT Day FROM Disabled_Dates;")
     disabled = []
     for i in cursor.fetchall():
         disabled.append(i[0])
+    mydb.commit()
     return disabled
 
 
 def get_hours_for_day(cursor, day):
     """get hours for specific day"""
-    hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
+    # hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
+    hours = ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"]
     day_hours = []
     # this is the hours that are taken
     cursor.execute("SELECT Hour FROM Available_Dates WHERE day_id = %s", (day,))
@@ -238,14 +229,13 @@ def get_hours_for_day(cursor, day):
 
 
 def get_all_cities(cursor):
+    """this func gets all cities and sort them alphabet"""
     cursor.execute("SELECT City FROM Cities;")
     cities = []
-    for i in cursor.fetchall():
-        cities.append(i[0])
-    # sorted__hebrew_list = ivsort(cities)
-    # print(sorted__hebrew_list)
-    # return sorted__hebrew_list
-    return cities
+    fetched_data = cursor.fetchall()
+    for city in fetched_data:
+        cities.append(city[0])
+    return sorted(cities)
 
 
 def add_city(cursor, mydb, city):
@@ -263,6 +253,7 @@ def delete_city(cursor, mydb, city):
 
 
 def edit_service_price(cursor, mydb, price, service):
+    """this func updates service's price"""
     sql = "UPDATE Services SET Service_Price = %s WHERE Service_Name = %s"
     val = (price, service)
     cursor.execute(sql, val)
@@ -278,6 +269,7 @@ def edit_description_for_service(cursor, mydb, desc, service):
 
 
 def edit_addon_price(cursor, mydb, price, addon):
+    """this func gets addon name and update his price"""
     sql = "UPDATE Addons SET Addon_Price = %s WHERE Addon_Name = %s"
     val = (price, addon)
     cursor.execute(sql, val)
@@ -299,16 +291,16 @@ def get_values(cursor, mydb, values):
     add_new_booking(cursor, mydb, hold_data)
 
 
-# will add the booking details to "Customers" table in DB
 def add_new_booking(cursor, mydb, data):
+    """will add the booking details to "Customers" table in DB"""
     sql = "INSERT INTO Customers (Full_Name, Email, Phone, Address, Service, Date, Hour, Price, Comments) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
     val = (data["full_name"], data["email"], data["phone"], data["address"], data["service"], data["date"], data["hour"], data["price"], data["comments"], )
     cursor.execute(sql, val)
     mydb.commit()
 
 
-# gett all customers details from db
 def get_all_customers(cursor):
+    """get all customers details from db for displaying in the table"""
     cursor.execute("SELECT * FROM Customers;")
     customers = []
     for i in cursor.fetchall():
@@ -317,6 +309,7 @@ def get_all_customers(cursor):
 
 
 def unblock_hour(cursor, mydb, data):
+    """this function frees hour after booking is deleted"""
     cursor.execute("DELETE FROM Available_Dates WHERE day_id = %s AND Hour = %s", (data["day"], data["hour"]))
     mydb.commit()
 
@@ -338,55 +331,16 @@ def delete_booking_only(cursor, mydb, id):
     mydb.commit()
 
 
-# def convertToBinaryData(filename):
-#     # Convert digital data to binary format
-#     with open(filename, 'rb') as file:
-#         blobData = file.read()
-#     return blobData
-
-#
-# def insert_image(cursor, mydb, txt):
-#    עובד
-#     with open('C:/Users/matan/Desktop/NOW/M.Y.P.jpeg', 'rb') as stream:
-#         blob = stream.read()
-#         cursor.execute("INSERT INTO Images (ID_SER, Image) VALUES(%s, %s)", (txt, blob))
-#     mydb.commit()
-
-
-
-# def insert_image(cursor, mydb, service, img):
-#     blob = img.read()
-#     cursor.execute("INSERT INTO Images (ID_SER, Image) VALUES(%s, %s)", (service, blob))
-#     mydb.commit()
-
-
-
-# def read_image(cursor):
-#     sql1 = 'select Image from Images'
-#     cursor.execute(sql1)
-#     data2 = cursor.fetchall()
-#     file_like2 = io.BytesIO(data2[0][0])
-#     img1 = Image.open(file_like2)
-#     img1.show()
-#
-#
-# def read_image_text(img):
-#     data2 = img
-#     file_like2 = io.BytesIO(data2)
-#     img1 = Image.open(file_like2)
-#     img1.show()
-
-
-# this func adds image to certain seervice
 def add_img_to_service(cursor, mydb, service, img):
+    """this func adds image to certain seervice"""
     sql = "INSERT INTO Images (ID_SER, image_url) VALUES (%s, %s)"
     val = (service, img)
     cursor.execute(sql, val)
     mydb.commit()
 
 
-# this func gives all images that belong to certain service
 def get_images_for_service(cursor, mydb, service):
+    """this func gives all images that belong to certain service"""
     images = []
     cursor.execute("SELECT image_rl FROM Images WHERE ID_SER = %s", (service,))
     for i in cursor.fetchall():
