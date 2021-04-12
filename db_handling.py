@@ -2,10 +2,20 @@
 import connect_database as connect
 from datetime import datetime, timedelta
 from ivsort import ivsort
-import PIL.Image
-import base64
-import io
-from PIL import Image
+
+
+# def read_from_text(cur, db):
+#     f = open('C:/Users/matan/Desktop/NOW/new.txt', 'r')
+#     cit = f.read().split("\n")
+#     asd = 0
+#     for i in cit:
+#         sql = "INSERT INTO Cities (City) VALUES (%s)"
+#         val = (i,)
+#         cur.execute(sql, val)
+#         asd += 1
+#         print(asd)
+#     db.commit()
+
 
 
 def connect_db():
@@ -157,6 +167,8 @@ def add_new_service(cursor, mydb, data):
     """Adding new service from Admin panel, including price and category ID"""
     sql = "INSERT INTO Services (ID_CAT, ID_SER, Service_Name, Service_Description, Service_Price) VALUES (%s, %s, %s, %s, %s)"
     val = (data["cat_name"], data["service_name"], data["service_name"], data["description"], data["price"], )
+    if data["image"]:
+        add_img_to_service(cursor, mydb, data["service_name"], data["image"])
     cursor.execute(sql, val)
     mydb.commit()
 
@@ -230,8 +242,11 @@ def get_all_cities(cursor):
     cities = []
     for i in cursor.fetchall():
         cities.append(i[0])
-    sorted__hebrew_list = ivsort(cities)
-    return sorted__hebrew_list
+        print(i)
+    # sorted__hebrew_list = ivsort(cities)
+    # print(sorted__hebrew_list)
+    # return sorted__hebrew_list
+    return cities
 
 
 def add_city(cursor, mydb, city):
@@ -363,13 +378,15 @@ def delete_booking_only(cursor, mydb, id):
 #     img1.show()
 
 
-def add_img_url(cursor, mydb, service, img):
+# this func adds image to certain seervice
+def add_img_to_service(cursor, mydb, service, img):
     sql = "INSERT INTO Images (ID_SER, image_url) VALUES (%s, %s)"
     val = (service, img)
     cursor.execute(sql, val)
     mydb.commit()
 
 
+# this func gives all images that belong to certain service
 def get_images_for_service(cursor, mydb, service):
     images = []
     cursor.execute("SELECT image_rl FROM Images WHERE ID_SER = %s", (service,))
@@ -381,8 +398,3 @@ def get_images_for_service(cursor, mydb, service):
 
 if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB
-    # insert_image(cursor, connection, "מורן")
-    # read_image(cursor)
-    # print("OK!")
-    # get_all_customers(cursor)
-

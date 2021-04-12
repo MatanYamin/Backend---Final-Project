@@ -249,7 +249,7 @@ def edit_addon_price():
 
 
 @app.route("/get/customers", methods=["GET"])
-# @cross_origin()
+@cross_origin()
 def get_all_customers():
     customers = db.get_all_customers(cursor)
     return flask.jsonify(customers)
@@ -293,7 +293,7 @@ def add_image():
     try:
         data_from_api = flask.request.data.decode()
         values = json.loads(data_from_api)
-        db.add_img_url(cursor, connection, values["service"], values["image"])
+        db.add_img_to_service(cursor, connection, values["service"], values["image"])
         return flask.jsonify("הכל בסדק")
 
     except:
