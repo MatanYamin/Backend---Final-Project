@@ -242,7 +242,6 @@ def get_all_cities(cursor):
     cities = []
     for i in cursor.fetchall():
         cities.append(i[0])
-        print(i)
     # sorted__hebrew_list = ivsort(cities)
     # print(sorted__hebrew_list)
     # return sorted__hebrew_list
