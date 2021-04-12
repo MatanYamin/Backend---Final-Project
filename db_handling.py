@@ -235,7 +235,8 @@ def get_all_cities(cursor):
     fetched_data = cursor.fetchall()
     for city in fetched_data:
         cities.append(city[0])
-    return sorted(cities)
+    soring = sorted(cities)
+    return soring
 
 
 def add_city(cursor, mydb, city):
