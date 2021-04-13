@@ -28,10 +28,9 @@ def email_handle(data):
     text = message.as_string()
     session.sendmail(sender_address, data["email"], text)
     session.quit()
-    print("Customer mail sent")
+    # print("Customer mail sent")
     email_handle_manager(data)  # after we sent to customer, we will send to manager
-    print("all is sent")
-    # return "all is sent"
+    # print("all is sent")
 
 
 def email_handle_manager(data):
@@ -55,7 +54,7 @@ def email_handle_manager(data):
     text = message.as_string()
     session.sendmail(sender_address, cn.email_manager(), text)
     session.quit()
-    print('Admin Mail Sent')
+    # print('Admin Mail Sent')
     # return 'Admin Mail Sent'
 
 

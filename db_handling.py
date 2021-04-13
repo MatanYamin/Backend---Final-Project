@@ -231,15 +231,17 @@ def get_hours_for_day(cursor, day):
 def get_all_cities(cursor):
     """this func gets all cities and sort them alphabet"""
     cursor.execute("SELECT City FROM Cities;")
+    # will hold all the cities there are inside DB
     cities = []
     fetched_data = cursor.fetchall()
     for city in fetched_data:
         cities.append(city[0])
-    soring = sorted(cities)
-    return soring
+    sorting_list = sorted(cities)
+    return sorting_list
 
 
 def add_city(cursor, mydb, city):
+    """will add city to the DB"""
     sql = "INSERT INTO Cities (City) VALUES (%s)"
     val = (city,)
     cursor.execute(sql, val)
@@ -247,6 +249,7 @@ def add_city(cursor, mydb, city):
 
 
 def delete_city(cursor, mydb, city):
+    "will delete city from DB"
     sql = "DELETE FROM Cities WHERE City = %s"
     val = (city,)
     cursor.execute(sql, val)
@@ -277,36 +280,49 @@ def edit_addon_price(cursor, mydb, price, addon):
     mydb.commit()
 
 
-def get_values(cursor, mydb, values):
-    """will get all values from the booking and add it to DB"""
-    hold_data = {}
-    hold_data["full_name"] = values["fullName"]
-    hold_data["email"] = values["email"]
-    hold_data["phone"] = values["phone"]
-    hold_data["address"] = values["fullAddress"]
-    hold_data["service"] = values["service"] + " " + values["addons"]
-    hold_data["date"] = day_plus_one(values["date"].split("T")[0])
-    hold_data["hour"] = values["hour"]
-    hold_data["price"] = values["price"]
-    hold_data["comments"] = values["comments"]
-    add_new_booking(cursor, mydb, hold_data)
+# def get_values(cursor, mydb, values):
+#     """will get all values from the booking and add it to DB"""
+#     hold_data = {}
+#     hold_data["full_name"] = values["fullName"]
+#     hold_data["email"] = values["email"]
+#     hold_data["phone"] = values["phone"]
+#     hold_data["address"] = values["fullAddress"]
+#     hold_data["service"] = values["service"] + " " + values["addons"]
+#     hold_data["date"] = day_plus_one(values["date"].split("T")[0])
+#     hold_data["hour"] = values["hour"]
+#     hold_data["price"] = values["price"]
+#     hold_data["comments"] = values["comments"]
+#     add_new_booking(cursor, mydb, hold_data)
+
+
+# def add_new_booking(cursor, mydb, data):
+#     """will add the booking details to "Customers" table in DB"""
+#     sql = "INSERT INTO Customers (Full_Name, Email, Phone, Address, Service, Date, Hour, Price, Comments) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+#     val = (data["full_name"], data["email"], data["phone"], data["address"], data["service"], data["date"], data["hour"], data["price"], data["comments"], )
+#     cursor.execute(sql, val)
+#     mydb.commit()
 
 
 def add_new_booking(cursor, mydb, data):
     """will add the booking details to "Customers" table in DB"""
+    full_service = data["service"] + " " + data["addons"]
+    # the date the comes is 1 day earlier so i'm moving it 1 day forward
+    new_date = day_plus_one(data["date"].split("T")[0])
     sql = "INSERT INTO Customers (Full_Name, Email, Phone, Address, Service, Date, Hour, Price, Comments) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    val = (data["full_name"], data["email"], data["phone"], data["address"], data["service"], data["date"], data["hour"], data["price"], data["comments"], )
+    val = (data["fullName"], data["email"], data["phone"], data["fullAddress"], full_service, new_date, data["hour"], data["price"], data["comments"], )
     cursor.execute(sql, val)
     mydb.commit()
 
 
-def get_all_customers(cursor):
+def get_all_customers(cursor, mydb):
     """get all customers details from db for displaying in the table"""
     cursor.execute("SELECT * FROM Customers;")
     customers = []
     for i in cursor.fetchall():
         customers.append(list(i))
-    return customers
+    mydb.commit()
+    sorted_by_date = sorted(customers, key=lambda x: x[6])
+    return sorted_by_date
 
 
 def unblock_hour(cursor, mydb, data):

@@ -22,7 +22,8 @@ CORS(app)
 def booking():
     data_from_api = flask.request.data.decode()  # get the body of the request
     values = json.loads(data_from_api)  # convert to jason in order to get the fields
-    db.get_values(cursor, connection, values)
+    # db.get_values(cursor, connection, values)
+    db.add_new_booking(cursor, connection, values)
     new_day = db.day_plus_one(values["date"].split("T")[0])
     values["day"] = db.findDay(values["date"]) + ": " + new_day
     email.email_handle(values)  # email handler sends emails to customet and manager
@@ -251,7 +252,7 @@ def edit_addon_price():
 @app.route("/get/customers", methods=["GET"])
 @cross_origin()
 def get_all_customers():
-    customers = db.get_all_customers(cursor)
+    customers = db.get_all_customers(cursor, connection)
     return flask.jsonify(customers)
 
 
