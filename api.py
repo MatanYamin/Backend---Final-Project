@@ -140,7 +140,7 @@ def get_service_price():
 def addon_price():
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    price = db.get_addon_price(cursor, connection, values["addon"])
+    price = db.get_addon_price(cursor, connection, values["addon"], values["ser"])
     return flask.jsonify(price)
 
 
