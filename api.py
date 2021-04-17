@@ -30,7 +30,7 @@ def booking():
     values["date"] = db.handle_time(cursor, connection, values["date"], values["hour"])  # handle time changes the date
     service = sync.syncalendar_and_service()
     event.create_event_and_insert(service, values)  # create event in the calendar
-    return 'OK'
+    return flask.jsonify("ok")
 
 
 # when we get into the first step, we will want all services displayed for specific category
@@ -295,7 +295,6 @@ def add_image():
         values = json.loads(data_from_api)
         db.add_img_to_service(cursor, connection, values["service"], values["image"])
         return 'OK'
-
     except:
         return 'משהו השתבש, רענן ונסה שוב'
 

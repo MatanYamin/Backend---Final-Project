@@ -121,7 +121,7 @@ def get_service_price(cursor, mydb, service):
 
 def get_addon_price(cursor, mydb, addon):
     """get price for a specific addon"""
-    cursor.execute("SELECT Addon_Price FROM Addons WHERE ID_ADD = %s", (addon,))
+    cursor.execute("SELECT Addon_Price FROM Addons WHERE Addon_Name = %s", (addon,))
     prices = []
     for i in cursor.fetchall():
         prices.append(i[0])
@@ -161,8 +161,8 @@ def add_new_service(cursor, mydb, data):
 
 def add_new_addon(cursor, mydb, data):
     """Adding a new addon for a certain service"""
-    sql = "INSERT INTO Addons (ID_SER, ID_ADD, Addon_Name, Addon_Price) VALUES (%s, %s, %s, %s)"
-    val = (data["service_name"], data["addon_name"], data["addon_name"], data["price"],)
+    sql = "INSERT INTO Addons (ID_SER, Addon_Name, Addon_Price) VALUES (%s, %s, %s)"
+    val = (data["service_name"], data["addon_name"], data["price"],)
     cursor.execute(sql, val)
     mydb.commit()
 
@@ -180,7 +180,7 @@ def delete_service(cursor, mydb, service):
 
 def delete_addon(cursor, mydb, addon):
     """deleting a specific addon"""
-    sql = "DELETE FROM Addons WHERE ID_ADD = %s"
+    sql = "DELETE FROM Addons WHERE Addon_Name = %s"
     val = (addon,)
     cursor.execute(sql, val)
     mydb.commit()
