@@ -8,7 +8,7 @@ import config as cn
 def email_handle(data):
     """this function gets an html content and send an Email using SMTP protocol
     to the customer and to the manager"""
-    content_message = email_content_to_customer(data)  # content will hold the HTML content in email
+    content_message = email_booking_content_to_customer(data)  # content will hold the HTML content in email
     # mail_content = "Hello, This is a simple mail. There is only text," \
     #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
     #The mail addresses and password
@@ -36,30 +36,25 @@ def email_handle(data):
 def email_handle_manager(data):
     """this function get an html content specially for the manager and send it to him
     after finding a nwe booking"""
-    content_message = email_content_to_manager(data)  # containing the manager email content
-    # mail_content = "Hello, This is a simple mail. There is only text," \
-    #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
-    #The mail addresses and password
+    content_message = email_booking_content_to_manager(data)  # containing the manager email content
     sender_address = cn.email_manager()  # for now, this is my email
     sender_pass = cn.email_manager_pass()
     message = MIMEMultipart()
     message['From'] = sender_address
     message['Subject'] = 'זומן תור חדש!'   #The subject line
-    #The body and the attachments for the mail
+    # The body and the attachments for the mail
     message.attach(content_message)
-    #Create SMTP session for sending the mail
+    # Create SMTP session for sending the mail
     session = smtplib.SMTP('smtp.gmail.com', 587)  # use gmail with port 587 on SMTP protocol
     session.starttls() #enable security
     session.login(sender_address, sender_pass) # login with mail_id and password
     text = message.as_string()
     session.sendmail(sender_address, cn.email_manager(), text)
     session.quit()
-    # print('Admin Mail Sent')
-    # return 'Admin Mail Sent'
 
 
 # content of email that will be send after booking to customer
-def email_content_to_customer(data):
+def email_booking_content_to_customer(data):
     """this is html content for the customer email
     will get some changes in the future
     needs to add more features"""
@@ -123,7 +118,7 @@ def email_content_to_customer(data):
 
 
 # content of email that will be send after booking to manager
-def email_content_to_manager(data):
+def email_booking_content_to_manager(data):
     """this is an html content for the managers"""
     if not data["comments"]:
         data["comments"] = "אין"
@@ -161,7 +156,7 @@ def email_content_to_manager(data):
 
 
 # content of email that will be send after cleaning to customer
-def email_feedback_content(data):
+def email_feedback_content_to_customer(data):
     html = """\
            <html dir="RTL">
              <head> 
@@ -170,10 +165,12 @@ def email_feedback_content(data):
              <body> 
                <p style="direction: rtl; text-align: right; font-family:georgia,garamond,serif;font-size:20px;font-style:italic;">שלום """ + \
            data["fullName"] + """<br>
-                 סיימנו את הניקוי  <br> <br> פרטי התור שלך נמצאים למטה.<br>;
-              רצינו לדעת איך היה
+           <br>
+           תודה רבה שבחרתם בסקיי קלינר כדי להשיאר נקיים.
+           <br>
+              נשמח אם תוכלו לענות על משוב קצר שיעזור לנו להשתפר <br/>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSd2n1okO4ayIdMlD88l35HN4e2UJTMnnWfZK6b55ciYrBWs3g/viewform?usp=sf_link">לחצו כאן למעבר למשוב </a>
              <footer style="direction: rtl; text-align: center;">
-
                <a href="https://www.facebook.com/SkyCleanerIsrael">
                <img src='https://purpleironingservices.com/wp-content/uploads/2017/02/facebook-footer-share.png' style='width: 6%;'>
                </a>
@@ -209,10 +206,7 @@ def email_feedback_content(data):
 def handle_feedback(data):
     """this function gets an html content and send an Email using SMTP protocol
         to the customer and to the manager"""
-    content_message = email_feedback_content(data)  # content will hold the HTML content in email
-    # mail_content = "Hello, This is a simple mail. There is only text," \
-    #                " no attachments are there The mail is sent using Python SMTP library.Thank You"
-    # The mail addresses and password
+    content_message = email_feedback_content_to_customer(data)  # content will hold the HTML content in email
     sender_address = cn.email_manager()  # for now, this is my email
     sender_pass = cn.email_manager_pass()
     # Setup the MIME
@@ -229,7 +223,3 @@ def handle_feedback(data):
     text = message.as_string()
     session.sendmail(sender_address, data["email"], text)
     session.quit()
-    # print("Customer mail sent")
-    # email_handle_manager(data)  # after we sent to customer, we will send to manager
-    # print("all is sent")
-    # return "all is sent"
