@@ -123,9 +123,9 @@ def get_service_price(cursor, mydb, service):
     return prices
 
 
-def get_addon_price(cursor, mydb, addon, service):
+def get_addon_price(cursor, mydb, addon):
     """get price for a specific addon"""
-    cursor.execute("SELECT Addon_Price FROM Addons WHERE Addon_Name = %s AND ID_SER = %s", (addon, service))
+    cursor.execute("SELECT Addon_Price FROM Addons WHERE Addon_Name = %s", (addon,))
     prices = []
     for i in cursor.fetchall():
         prices.append(i[0])
