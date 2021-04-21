@@ -299,6 +299,20 @@ def add_image():
         return 'משהו השתבש, רענן ונסה שוב'
 
 
+# posting new main image in DB for service
+@app.route("/post/mainimages", methods=["POST"])
+@cross_origin()
+def add_main_image_to_service():
+    try:
+        data_from_api = flask.request.data.decode()
+        values = json.loads(data_from_api)
+        db.add_main_img_to_service(cursor, connection, values["service"], values["image"])
+        return 'OK'
+    except:
+        return 'משהו השתבש, רענן ונסה שוב'
+
+
+
 
 if __name__ == "__main__":
     # app.run(debug=True, host="3.138.43.76", port=8080)

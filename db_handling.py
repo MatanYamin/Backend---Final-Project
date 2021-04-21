@@ -356,18 +356,18 @@ def delete_booking_only(cursor, mydb, id):
     mydb.commit()
 
 
-def add_main_img_to_service(cursor, mydb, service, img):
-    """this func adds main image to certain seervice"""
-    sql = "INSERT INTO Images (ID_SER, Main_Img) VALUES (%s, %s)"
+def add_img_to_service(cursor, mydb, service, img):
+    """this func adds image to certain seervice"""
+    sql = "INSERT INTO Images (ID_SER, image_url) VALUES (%s, %s)"
     val = (service, img)
     cursor.execute(sql, val)
     mydb.commit()
 
 
-def add_img_to_service(cursor, mydb, service, img):
-    """this func adds image to certain seervice"""
-    sql = "INSERT INTO Images (ID_SER, image_url) VALUES (%s, %s)"
-    val = (service, img)
+def add_main_img_to_service(cursor, mydb, service, img):
+    """this func adds the main image to certain seervice"""
+    sql = "UPDATE Services SET Service_Image = %s WHERE ID_SER = %s"
+    val = (img, service)
     cursor.execute(sql, val)
     mydb.commit()
 
