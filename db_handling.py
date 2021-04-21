@@ -63,12 +63,16 @@ def findDay(date):
     return day
 
 
-def get_service_by_category(cursor, mydb, service):
+def get_service_by_category(cursor, mydb, category):
     """getting all services for specific category"""
-    cursor.execute("SELECT Service_Name FROM Services WHERE ID_CAT = %s", (service,))
+    cursor.execute("SELECT Service_Name, Service_Image FROM Services WHERE ID_CAT = %s", (category,))
     service_vals = []
+    default_image = "https://s3-us-west-2.amazonaws.com/melingoimages/Images/87718.jpg"
     for i in cursor.fetchall():
-        service_vals.append(i[0])
+        if(i[1]):
+            service_vals.append((i[0], i[1]))
+        else:
+            service_vals.append((i[0], default_image))
     mydb.commit()
     return service_vals
 
@@ -152,10 +156,13 @@ def get_all_services(cursor, mydb):
 
 def add_new_service(cursor, mydb, data):
     """Adding new service from Admin panel, including price and category ID"""
-    sql = "INSERT INTO Services (ID_CAT, ID_SER, Service_Name, Service_Description, Service_Price) VALUES (%s, %s, %s, %s, %s)"
-    val = (data["cat_name"], data["service_name"], data["service_name"], data["description"], data["price"], )
+    default_image = "https://ibb.co/0QVxcPF"
     if data["image"]:
-        add_img_to_service(cursor, mydb, data["service_name"], data["image"])
+        sql = "INSERT INTO Services (ID_CAT, ID_SER, Service_Name, Service_Description, Service_Price, Service_Image) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (data["cat_name"], data["service_name"], data["service_name"], data["description"], data["price"], data["image"])
+    else:
+        sql = "INSERT INTO Services (ID_CAT, ID_SER, Service_Name, Service_Description, Service_Price, Service_Image) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (data["cat_name"], data["service_name"], data["service_name"], data["description"], data["price"], default_image)
     cursor.execute(sql, val)
     mydb.commit()
 
@@ -345,6 +352,14 @@ def delete_booking_only(cursor, mydb, id):
     """will delete booking only"""
     sql = "DELETE FROM Customers WHERE id = %s"
     val = (id,)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
+def add_main_img_to_service(cursor, mydb, service, img):
+    """this func adds main image to certain seervice"""
+    sql = "INSERT INTO Images (ID_SER, Main_Img) VALUES (%s, %s)"
+    val = (service, img)
     cursor.execute(sql, val)
     mydb.commit()
 
