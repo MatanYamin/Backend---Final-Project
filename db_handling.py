@@ -236,7 +236,7 @@ def get_hours_for_day(cursor, day):
     return hours
 
 
-def get_all_cities(cursor):
+def get_all_cities(cursor, mydb):
     """this func gets all cities and sort them alphabet"""
     cursor.execute("SELECT City FROM Cities;")
     # will hold all the cities there are inside DB
@@ -245,6 +245,7 @@ def get_all_cities(cursor):
     for city in fetched_data:
         cities.append(city[0])
     sorting_list = sorted(cities)
+    mydb.commit()
     return sorting_list
 
 

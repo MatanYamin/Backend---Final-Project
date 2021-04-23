@@ -9,8 +9,6 @@ import db_handling as db
 from flask_cors import CORS, cross_origin
 
 
-connection = connect.connect_db()
-cursor = connection.cursor()
 app = Flask(__name__)
 # cors = CORS(app, resources={r"/foo": {"origins": "*"}})
 # app.config['CORS_HEADERS'] = 'Content-Type'
@@ -20,6 +18,8 @@ CORS(app)
 @app.route("/booking", methods=["POST"])
 @cross_origin()
 def booking():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()  # get the body of the request
     values = json.loads(data_from_api)  # convert to jason in order to get the fields
     # db.get_values(cursor, connection, values)
@@ -30,6 +30,7 @@ def booking():
     values["date"] = db.handle_time(cursor, connection, values["date"], values["hour"])  # handle time changes the date
     service = sync.syncalendar_and_service()
     event.create_event_and_insert(service, values)  # create event in the calendar
+    connection.close()
     return flask.jsonify("ok")
 
 
@@ -37,9 +38,12 @@ def booking():
 @app.route("/services", methods=["POST"])
 @cross_origin()
 def get_service_by_category():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()  # getting the body request
     values = json.loads(data_from_api)
     services = db.get_service_by_category(cursor, connection, values['title'])
+    connection.close()
     return flask.jsonify(services)
 
 
@@ -47,7 +51,10 @@ def get_service_by_category():
 @app.route("/get/categories", methods=["GET"])
 @cross_origin()
 def get_all_categories():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     categories = db.get_all_categories(cursor, connection)
+    connection.close()
     return flask.jsonify(categories)
 
 
@@ -55,9 +62,12 @@ def get_all_categories():
 @app.route("/post/service", methods=["POST"])
 @cross_origin()
 def add_new_service():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()  # getting the body request
     values = json.loads(data_from_api)
     db.add_new_service(cursor, connection, values)
+    connection.close()
     return "ok"
 
 
@@ -65,7 +75,10 @@ def add_new_service():
 @app.route("/get/addons", methods=["GET"])
 @cross_origin()
 def get_all_addons():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     addons = db.get_all_addons(cursor, connection)
+    connection.close()
     return flask.jsonify(addons)
 
 
@@ -73,9 +86,12 @@ def get_all_addons():
 @app.route("/delete/addon", methods=["DELETE"])
 @cross_origin()
 def delete_addon():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()  # getting the body request
     values = json.loads(data_from_api)
     db.delete_addon(cursor, connection, values["addon_name"])
+    connection.close()
     return "ok"
 
 
@@ -83,16 +99,22 @@ def delete_addon():
 @app.route("/get/services", methods=["GET"])
 @cross_origin()
 def get_services():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     services = db.get_all_services(cursor, connection)
+    connection.close()
     return flask.jsonify(services)
 
 
 @app.route("/put/addon", methods=["PUT"])
 @cross_origin()
 def add_new_addon():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()  # getting the body request
     values = json.loads(data_from_api)
     db.add_new_addon(cursor, connection, values)
+    connection.close()
     return "ok"
 
 
@@ -100,18 +122,24 @@ def add_new_addon():
 @app.route("/delete/service", methods=["DELETE"])
 @cross_origin()
 def delete_service():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()  # getting the body request
     values = json.loads(data_from_api)
     db.delete_service(cursor, connection, values["service_name"])
+    connection.close()
     return "ok"
 
 
 @app.route("/addon", methods=["POST"])
 @cross_origin()
 def addons_title():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     addons = db.get_all_addons_by_service(cursor, connection, values['add'])
+    connection.close()
     return flask.jsonify(addons)
 
 
@@ -119,9 +147,12 @@ def addons_title():
 @app.route("/prices", methods=["POST"])
 @cross_origin()
 def price_and_details():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     price, dits, images = db.get_service_price_and_description(cursor, connection, values["service"])
+    connection.close()
     return flask.jsonify(price, dits, images)
 
 
@@ -129,18 +160,24 @@ def price_and_details():
 @app.route("/admin/prices", methods=["POST"])
 @cross_origin()
 def get_service_price():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     price = db.get_service_price(cursor, connection, values["prices"])
+    connection.close()
     return flask.jsonify(price)
 
 
 @app.route("/prices/addon", methods=["POST"])
 @cross_origin()
 def addon_price():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     price = db.get_addon_price(cursor, connection, values["addon"])
+    connection.close()
     return flask.jsonify(price)
 
 
@@ -148,11 +185,14 @@ def addon_price():
 @app.route("/put/disabledate", methods=["PUT"])
 @cross_origin()
 def disable_date():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     day = values["date"].split("T")
     new_day = db.day_plus_one(day[0])
     db.add_date_to_be_disable(cursor, connection, new_day)
+    connection.close()
     return "ok"
 
 
@@ -160,11 +200,14 @@ def disable_date():
 @app.route("/delete/activatedate", methods=["DELETE"])
 @cross_origin()
 def activate_date():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     day = values["date"].split("T")
     new_day = db.day_plus_one(day[0])
     db.delete_disabled_date(cursor, connection, new_day)
+    connection.close()
     return "ok"
 
 
@@ -172,7 +215,10 @@ def activate_date():
 @app.route("/get/disabledate", methods=["GET"])
 @cross_origin()
 def get_disable_dates():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     disabled_days = db.get_all_disabled_dates(cursor, connection)
+    connection.close()
     return flask.jsonify(disabled_days)
 
 
@@ -180,11 +226,14 @@ def get_disable_dates():
 @app.route("/post/hours", methods=["POST"])
 @cross_origin()
 def get_hours_for_day():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     day = values["date"].split("T")
     new_day = db.day_plus_one(day[0])
     hours = db.get_hours_for_day(cursor, new_day)
+    connection.close()
     return flask.jsonify(hours)
 
 
@@ -192,18 +241,24 @@ def get_hours_for_day():
 @app.route("/post/newhours", methods=["POST"])
 @cross_origin()
 def block_hour():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     day = values["date"].split("T")
     new_day = db.day_plus_one(day[0])
     hours = db.block_hour(cursor, connection, new_day, values["hour"])
+    connection.close()
     return flask.jsonify(hours)
 
 
 @app.route("/get/cities", methods=["GET"])
 @cross_origin()
 def get_all_cities():
-    cities = db.get_all_cities(cursor)
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    cities = db.get_all_cities(cursor, connection)
+    connection.close()
     return flask.jsonify(cities)
 
 
@@ -216,52 +271,70 @@ def get_something():
 @app.route("/post/city", methods=["POST"])
 @cross_origin()
 def add_city():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     db.add_city(cursor, connection, values["city"])
+    connection.close()
     return "ok"
 
 
 @app.route("/delete/city", methods=["DELETE"])
 @cross_origin()
 def delete_city():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     db.delete_city(cursor, connection, values["city"])
+    connection.close()
     return "ok"
 
 
 @app.route("/put/service_price", methods=["PUT"])
 @cross_origin()
 def edit_service_price():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     db.edit_service_price(cursor, connection, values["price"], values["service"])
+    connection.close()
     return flask.jsonify(values["price"])
 
 
 @app.route("/put/addon_price", methods=["PUT"])
 @cross_origin()
 def edit_addon_price():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     db.edit_addon_price(cursor, connection, values["price"], values["addon"])
+    connection.close()
     return flask.jsonify(values["price"])
 
 
 @app.route("/get/customers", methods=["GET"])
 @cross_origin()
 def get_all_customers():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     customers = db.get_all_customers(cursor, connection)
+    connection.close()
     return flask.jsonify(customers)
 
 
 @app.route("/delete/booking", methods=["DELETE"])
 @cross_origin()
 def delete_booking():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     db.delete_booking_and_unblock_hour(cursor, connection, values)
+    connection.close()
     return "ok"
 
 
@@ -269,10 +342,13 @@ def delete_booking():
 @app.route("/post/feedback", methods=["POST"])
 @cross_origin()
 def send_feedback():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     email.handle_feedback(values)
     # db.delete_booking_only(cursor, connection, values["id"])
+    connection.close()
     return 'ok'
 
 
@@ -280,9 +356,12 @@ def send_feedback():
 @app.route("/put/service_description", methods=["PUT"])
 @cross_origin()
 def edit_description_for_service():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     db.edit_description_for_service(cursor, connection, values["description"], values["service"])
+    connection.close()
     return 'ok'
 
 
@@ -290,10 +369,13 @@ def edit_description_for_service():
 @app.route("/post/images", methods=["POST"])
 @cross_origin()
 def add_image():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     try:
         data_from_api = flask.request.data.decode()
         values = json.loads(data_from_api)
         db.add_img_to_service(cursor, connection, values["service"], values["image"])
+        connection.close()
         return 'OK'
     except:
         return 'משהו השתבש, רענן ונסה שוב'
@@ -303,10 +385,13 @@ def add_image():
 @app.route("/post/mainimages", methods=["POST"])
 @cross_origin()
 def add_main_image_to_service():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
     try:
         data_from_api = flask.request.data.decode()
         values = json.loads(data_from_api)
         db.add_main_img_to_service(cursor, connection, values["service"], values["image"])
+        connection.close()
         return 'OK'
     except:
         return 'משהו השתבש, רענן ונסה שוב'
