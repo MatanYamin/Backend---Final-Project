@@ -281,6 +281,22 @@ def edit_description_for_service(cursor, mydb, desc, service):
     mydb.commit()
 
 
+def get_description_for_service(cursor, mydb, service):
+    """will change description for service"""
+    sql = "SELECT Service_Description FROM Services WHERE Service_Name = %s"
+    val = (service, )
+    cursor.execute(sql, val)
+    description = []
+    for i in cursor.fetchall():
+        description.append(i[0])
+    mydb.commit()
+    if description == []:
+        description = "אין תיאור כרגע"
+        return description
+    else:
+        return description[0]
+
+
 def edit_addon_price(cursor, mydb, price, addon):
     """this func gets addon name and update his price"""
     sql = "UPDATE Addons SET Addon_Price = %s WHERE Addon_Name = %s"

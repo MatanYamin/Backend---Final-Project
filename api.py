@@ -364,6 +364,18 @@ def edit_description_for_service():
     connection.close()
     return 'ok'
 
+# getting description from service
+@app.route("/post/service_description", methods=["POST"])
+@cross_origin()
+def get_description_for_service():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    description = db.get_description_for_service(cursor, connection, values["service"])
+    connection.close()
+    return description
+
 
 # posting new image in DB
 @app.route("/post/images", methods=["POST"])
