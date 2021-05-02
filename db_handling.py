@@ -350,6 +350,17 @@ def get_all_customers(cursor, mydb):
     return sorted_by_date
 
 
+def get_customers_address(cursor, mydb):
+    """get all customers details from db for displaying in the table"""
+    cursor.execute("SELECT Address FROM Customers;")
+    address = []
+    for i in cursor.fetchall():
+        address.append(list(i))
+    mydb.commit()
+    # sorted_by_date = sorted(customers, key=lambda x: x[6])
+    return address
+
+
 def unblock_hour(cursor, mydb, data):
     """this function frees hour after booking is deleted"""
     cursor.execute("DELETE FROM Available_Dates WHERE day_id = %s AND Hour = %s", (data["day"], data["hour"]))

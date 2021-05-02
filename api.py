@@ -326,6 +326,16 @@ def get_all_customers():
     return flask.jsonify(customers)
 
 
+@app.route("/get/customers/address", methods=["GET"])
+@cross_origin()
+def get_customers_address():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    address = db.get_customers_address(cursor, connection)
+    connection.close()
+    return flask.jsonify(address)
+
+
 @app.route("/delete/booking", methods=["DELETE"])
 @cross_origin()
 def delete_booking():
