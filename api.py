@@ -30,7 +30,7 @@ def booking():
     service = sync.syncalendar_and_service()
     event.create_event_and_insert(service, values)  # create event in the calendar
     connection.close()
-    return flask.jsonify("ok")
+    return 'OK'
 
 
 # when we get into the first step, we will want all services displayed for specific category
