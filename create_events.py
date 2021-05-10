@@ -1,4 +1,4 @@
-import synCalendar as syn
+import syn_calendar as syn
 # Refer to the Python quickstart on how to setup the environment:
 # https://developers.google.com/calendar/quickstart/python
 # Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any

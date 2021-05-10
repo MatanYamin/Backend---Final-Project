@@ -411,5 +411,14 @@ def get_images_for_service(cursor, mydb, service):
     return images
 
 
+def get_note(cursor, mydb, service):
+    note = []
+    cursor.execute("SELECT Note FROM Services WHERE ID_SER = %s", (service,))
+    for i in cursor.fetchall():
+        note.append(i[0])
+    mydb.commit()
+    return note
+
+
 if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB

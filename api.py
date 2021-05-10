@@ -2,7 +2,7 @@ from flask import Flask
 import flask
 import json
 import email_handler as email
-import synCalendar as sync
+import syn_calendar as sync
 import event_handler as event
 import connect_database as connect
 import db_handling as db
@@ -25,7 +25,7 @@ def booking():
     db.add_new_booking(cursor, connection, values)
     new_day = db.day_plus_one(values["date"].split("T")[0])
     values["day"] = db.findDay(values["date"]) + ": " + new_day
-    email.email_handle(values)  # email handler sends emails to customet and manager
+    email.email_handle(values)  # email handler sends emails to customer and manager
     values["date"] = db.handle_time(cursor, connection, values["date"], values["hour"])  # handle time changes the date
     service = sync.syncalendar_and_service()
     event.create_event_and_insert(service, values)  # create event in the calendar
@@ -181,7 +181,7 @@ def addon_price():
 
 
 # this date will be exclude from calendar
-@app.route("/put/disabledate", methods=["PUT"])
+@app.route("/put/disable_date", methods=["PUT"])
 @cross_origin()
 def disable_date():
     connection = connect.connect_db()
@@ -196,7 +196,7 @@ def disable_date():
 
 
 # this date will be exclude from calendar
-@app.route("/delete/activatedate", methods=["DELETE"])
+@app.route("/delete/activate_date", methods=["DELETE"])
 @cross_origin()
 def activate_date():
     connection = connect.connect_db()
@@ -211,7 +211,7 @@ def activate_date():
 
 
 # will get all days to be disable from DB
-@app.route("/get/disabledate", methods=["GET"])
+@app.route("/get/disable_date", methods=["GET"])
 @cross_origin()
 def get_disable_dates():
     connection = connect.connect_db()
@@ -237,7 +237,7 @@ def get_hours_for_day():
 
 
 # will block hour for giving services
-@app.route("/post/newhours", methods=["POST"])
+@app.route("/post/new_hours", methods=["POST"])
 @cross_origin()
 def block_hour():
     connection = connect.connect_db()
@@ -352,7 +352,7 @@ def delete_booking():
 @cross_origin()
 def send_feedback():
     connection = connect.connect_db()
-    cursor = connection.cursor()
+    # cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
     email.handle_feedback(values)
@@ -372,6 +372,7 @@ def edit_description_for_service():
     db.edit_description_for_service(cursor, connection, values["description"], values["service"])
     connection.close()
     return 'ok'
+
 
 # getting description from service
 @app.route("/post/service_description", methods=["POST"])
@@ -398,12 +399,12 @@ def add_image():
         db.add_img_to_service(cursor, connection, values["service"], values["image"])
         connection.close()
         return 'OK'
-    except:
-        return 'משהו השתבש, רענן ונסה שוב'
+    except Exception as e:
+        return e
 
 
 # posting new main image in DB for service
-@app.route("/post/mainimages", methods=["POST"])
+@app.route("/post/main_images", methods=["POST"])
 @cross_origin()
 def add_main_image_to_service():
     connection = connect.connect_db()
@@ -414,10 +415,20 @@ def add_main_image_to_service():
         db.add_main_img_to_service(cursor, connection, values["service"], values["image"])
         connection.close()
         return 'OK'
-    except:
-        return 'משהו השתבש, רענן ונסה שוב'
+    except Exception as e:
+        return e
 
 
+@app.route("/post/notes", methods=["POST"])
+@cross_origin()
+def get_note_for_service():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    note = db.get_note(cursor, connection, values["service"])
+    connection.close()
+    return flask.jsonify(note)
 
 
 if __name__ == "__main__":
