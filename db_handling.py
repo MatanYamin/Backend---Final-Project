@@ -44,7 +44,8 @@ def findDay(date):
     """Get the week day from a certain date and translate it to hebrew"""
     date = date.split("T")
     day_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    day = datetime.strptime(date[0], '%Y-%m-%d').weekday()
+    new_date = day_plus_one(date[0])
+    day = datetime.strptime(new_date, '%Y-%m-%d').weekday()
     day = day_name[day]
     if day == "Sunday":
         day = "יום ראשון"

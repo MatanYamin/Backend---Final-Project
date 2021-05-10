@@ -4,7 +4,7 @@
 def create_event_and_insert(service, data):
     """we get here data after inserting to dictionary all parameters
        creating the event to send to the relevant places"""
-    print(data)
+    # print(data)
     event = {  # this event will go the manager and customer calendar in phone
         'summary': "ניקוי עם סקאי קלינר!",
         'location': data["fullAddress"],
@@ -32,6 +32,7 @@ def create_event_and_insert(service, data):
         },
     }
     # connecting to calendar and insert event
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    print('Event created: %s' % (event.get('htmlLink')))
+    # event = service.events().insert(calendarId='primary', body=event).execute()
+    service.events().insert(calendarId='primary', body=event).execute()
+    # print('Event created: %s' % (event.get('htmlLink')))
     # return "event is done"

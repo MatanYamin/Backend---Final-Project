@@ -65,10 +65,10 @@ def email_booking_content_to_customer(data):
            <meta charset="utf-8">
            </head>
           <body> 
-            <p style="direction: rtl; text-align: right; font-family:georgia,garamond,serif;font-size:20px;font-style:italic;">שלום """ + \
+            <p style="direction: rtl; text-align: right; font-size:20px;">שלום """ + \
            data["fullName"] + """<br>
               תודה על זימון הפגישה עם סקייקלינר, עוד קצת ואתם נקיים! הפגישה נקבעה בהצלחה והועברה אל צוות המומחים שלנו!  <br> <br> פרטי התור שלך נמצאים למטה.<br>&#8986;
-            מתי? ב """ + data["day"] + """ <br>
+            מתי? ב""" + data["day"] + """ <br>
               בשעה """ + data["hour"] + """ <br><br> &#128467;  
                איפה?  <br>  	
               """ + data["fullAddress"] + """ <br><br>
