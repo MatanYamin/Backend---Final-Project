@@ -157,7 +157,7 @@ def get_all_services(cursor, mydb):
 
 def add_new_service(cursor, mydb, data):
     """Adding new service from Admin panel, including price and category ID"""
-    default_image = "https://ibb.co/0QVxcPF"
+    default_image = "https://s3-us-west-2.amazonaws.com/melingoimages/Images/87718.jpg"
     if data["image"]:
         sql = "INSERT INTO Services (ID_CAT, ID_SER, Service_Name, Service_Description, Service_Price, Service_Image) VALUES (%s, %s, %s, %s, %s, %s)"
         val = (data["cat_name"], data["service_name"], data["service_name"], data["description"], data["price"], data["image"])
@@ -177,12 +177,18 @@ def add_new_addon(cursor, mydb, data):
 
 
 def delete_service(cursor, mydb, service):
-    """deleting a service from admin panel"""
-    sql = "DELETE FROM Addons WHERE ID_SER = %s"  # first delete the addons
+    """deleting a service from admin's panel"""
+    sql = "SELECT ID_SER FROM Services WHERE Service_Name = %s"
     val = (service,)
     cursor.execute(sql, val)
+    services = []
+    for i in cursor.fetchall():
+        services.append(i[0])
+    sql = "DELETE FROM Addons WHERE ID_SER = %s"  # first delete the addons
+    val = (services[0],)
+    cursor.execute(sql, val)
     sql = "DELETE FROM Services WHERE ID_SER = %s"
-    val = (service,)
+    val = (services[0],)
     cursor.execute(sql, val)
     mydb.commit()
 
@@ -418,6 +424,23 @@ def get_note(cursor, mydb, service):
         note.append(i[0])
     mydb.commit()
     return note
+
+
+def edit_service_name(cursor, mydb, service, new_name):
+    """this func changes service name from the admin's panel"""
+    # sql = "UPDATE Addons, Services SET Addons.ID_SER = %s, Services.ID_SER = %s, Services.Service_Name = %s " \
+    #       "FROM Addons addon, Services ser WHERE addon.ID_SER = %s AND ser.ID_SER = %s"
+    # val = (new_name, new_name, new_name, service, service)
+    # cursor.execute(sql, val)
+    # mydb.commit()
+    # sql = "UPDATE Addons SET ID_SER = %s WHERE ID_SER = %s"
+    # val = (new_name, service)
+    # cursor.execute(sql, val)
+    # mydb.commit()
+    sql = "UPDATE Services SET Service_Name = %s WHERE ID_SER = %s"
+    val = (new_name, service)
+    cursor.execute(sql, val)
+    mydb.commit()
 
 
 if __name__ == '__main__':

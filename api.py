@@ -431,6 +431,19 @@ def get_note_for_service():
     return flask.jsonify(note)
 
 
+# changes the service name
+@app.route("/put/service_name", methods=["PUT"])
+@cross_origin()
+def edit_service_name():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.edit_service_name(cursor, connection, values["service"], values["newName"])
+    connection.close()
+    return 'ok'
+
+
 if __name__ == "__main__":
     # app.run(debug=True, host="3.138.43.76", port=8080)
     # CORS(app)
