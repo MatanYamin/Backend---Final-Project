@@ -437,7 +437,7 @@ def edit_service_name(cursor, mydb, service, new_name):
     # val = (new_name, service)
     # cursor.execute(sql, val)
     # mydb.commit()
-    sql = "UPDATE Services SET Service_Name = %s WHERE ID_SER = %s"
+    sql = "UPDATE Services SET Service_Name = %s WHERE Service_Name = %s"
     val = (new_name, service)
     cursor.execute(sql, val)
     mydb.commit()
