@@ -105,6 +105,7 @@ def get_services():
     return flask.jsonify(services)
 
 
+# adding new addon with the relevant values
 @app.route("/put/addon", methods=["PUT"])
 @cross_origin()
 def add_new_addon():
@@ -130,6 +131,7 @@ def delete_service():
     return "ok"
 
 
+# returning all addons that belong to a service that being sent from the frontend
 @app.route("/addon", methods=["POST"])
 @cross_origin()
 def addons_title():
@@ -168,6 +170,7 @@ def get_service_price():
     return flask.jsonify(price)
 
 
+# getting price of a certain addon
 @app.route("/prices/addon", methods=["POST"])
 @cross_origin()
 def addon_price():
