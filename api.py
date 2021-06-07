@@ -328,6 +328,7 @@ def get_all_customers():
     return flask.jsonify(customers)
 
 
+# this is for shoing the address on the google map API
 @app.route("/get/customers/address", methods=["GET"])
 @cross_origin()
 def get_customers_address():

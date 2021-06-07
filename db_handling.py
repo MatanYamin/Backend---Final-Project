@@ -1,6 +1,6 @@
 # Programmed by Matan Yamin - Final Project.
 import connect_database as connect
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 
 def connect_db():
@@ -350,23 +350,58 @@ def get_all_customers(cursor, mydb):
     """get all customers details from db for displaying in the table"""
     cursor.execute("SELECT * FROM Customers;")
     customers = []
+    today = date.today()
+    future_bookings = []
     for i in cursor.fetchall():
         customers.append(list(i))
     mydb.commit()
     sorted_by_date = sorted(customers, key=lambda x: x[6])
-    return sorted_by_date
+    for i in sorted_by_date:
+        if i[6] >= str(today):
+            future_bookings.append(i)
+    return future_bookings
 
 
 def get_customers_address(cursor, mydb):
-    """get all customers details from db for displaying in the table"""
+    """get all customers details from db for displaying in the table
+       the showing addresses will be only the future bookings"""
     cursor.execute("SELECT Address FROM Customers;")
     address = []
+    final_results = []
     for i in cursor.fetchall():
         address.append(list(i))
     mydb.commit()
-    # sorted_by_date = sorted(customers, key=lambda x: x[6])
-    return address
+    cursor.execute("SELECT * FROM Customers;")
+    customers = []
+    today = date.today()
+    future_bookings = []
+    for i in cursor.fetchall():
+        customers.append(list(i))
+    mydb.commit()
+    # this is sorting the list by the date
+    sorted_by_date = sorted(customers, key=lambda x: x[6])
+    # this loop keeping only the futre bookings after today
+    for i in sorted_by_date:
+        if i[6] >= str(today):
+            future_bookings.append(i[4])
+    # after we have only future bookings, we are getting only the addresses for displaying in map
+    for i in address:
+        if i[0] in future_bookings:
+            # whatever inside "future_bookings" is a future bookings so we append it to "final_results"
+            final_results.append(i)
+    return final_results
 
+
+# def get_customers_address(cursor, mydb):
+#     """get all customers details from db for displaying in the table"""
+#     cursor.execute("SELECT * FROM Customers;")
+#     address = []
+#     for i in cursor.fetchall():
+#         # print(i[4])
+#         address.append(list(i[4]))
+#     mydb.commit()
+#     # sorted_by_date = sorted(customers, key=lambda x: x[6])
+#     return address
 
 def unblock_hour(cursor, mydb, data):
     """this function frees hour after booking is deleted"""
