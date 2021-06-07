@@ -422,6 +422,7 @@ def add_main_image_to_service():
         return e
 
 
+# currently unavailable
 @app.route("/post/notes", methods=["POST"])
 @cross_origin()
 def get_note_for_service():
