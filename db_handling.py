@@ -217,13 +217,26 @@ def delete_disabled_date(cursor, mydb, day):
     mydb.commit()
 
 
-def get_all_disabled_dates(cursor, mydb):
+def get_all_disabled_dates(cursor, mydb, city):
     """this func returns all dates that are disabled for work by the manager
        later, the calendar will read those hours and block them for everyone"""
+    # first of all get disabled dates that made by the admin
     cursor.execute("SELECT Day FROM Disabled_Dates;")
     disabled = []
     for i in cursor.fetchall():
         disabled.append(i[0])
+    # now we are getting the region of the chosen city
+    cursor.execute("SELECT region FROM Cities WHERE City = %s", (city,))
+    region = []
+    for i in cursor.fetchall():
+        region.append(i[0])
+    # I added option that if the manager doesnt mind the region, he could use it, and region will be "5"
+    if region[0] == 5:
+        return disabled
+    # here we check on which days there are booking with the area
+    cursor.execute("SELECT date FROM Region WHERE area != %s", (region[0],))
+    for i in cursor.fetchall():
+        disabled.append((i[0]))
     mydb.commit()
     return disabled
 
@@ -256,10 +269,11 @@ def get_all_cities(cursor, mydb):
     return sorting_list
 
 
-def add_city(cursor, mydb, city):
+def add_city(cursor, mydb, city, region):
     """will add city to the DB"""
-    sql = "INSERT INTO Cities (City) VALUES (%s)"
-    val = (city,)
+    print(region)
+    sql = "INSERT INTO Cities (City, region) VALUES (%s, %s)"
+    val = (city, region, )
     cursor.execute(sql, val)
     mydb.commit()
 
@@ -342,6 +356,20 @@ def add_new_booking(cursor, mydb, data):
     new_date = day_plus_one(data["date"].split("T")[0])
     sql = "INSERT INTO Customers (Full_Name, Email, Phone, Address, Service, Date, Hour, Price, Comments) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
     val = (data["fullName"], data["email"], data["phone"], data["fullAddress"], full_service, new_date, data["hour"], data["price"], data["comments"], )
+    cursor.execute(sql, val)
+    add_to_region(cursor, mydb, data["cit"], new_date)
+    # mydb.commit()
+
+
+def add_to_region(cursor, mydb, city, dat):
+    # getting the region of a city
+    cursor.execute("SELECT region FROM Cities WHERE City = %s", (city,))
+    region = []
+    for i in cursor.fetchall():
+        region.append(i[0])
+    # after we know the region, we insert the data into "Region" table with the date for later use
+    sql = "INSERT INTO Region (area, date) VALUES (%s, %s)"
+    val = (region[0], dat, )
     cursor.execute(sql, val)
     mydb.commit()
 
@@ -476,6 +504,15 @@ def edit_service_name(cursor, mydb, service, new_name):
     val = (new_name, service)
     cursor.execute(sql, val)
     mydb.commit()
+
+
+def disable_by_region(cursor, mydb, city):
+    cursor.execute("SELECT Address FROM Customers;")
+    address = []
+    final_results = []
+    for i in cursor.fetchall():
+        address.append(list(i))
+    # sorted_by_date = sorted(customers, key=lambda x: x[6])
 
 
 if __name__ == '__main__':

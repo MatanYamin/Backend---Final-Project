@@ -214,14 +214,14 @@ def activate_date():
 
 
 # will get all days to be disable from DB
-@app.route("/get/disable_date", methods=["GET"])
-@cross_origin()
-def get_disable_dates():
-    connection = connect.connect_db()
-    cursor = connection.cursor()
-    disabled_days = db.get_all_disabled_dates(cursor, connection)
-    connection.close()
-    return flask.jsonify(disabled_days)
+# @app.route("/get/disable_date", methods=["GET"])
+# @cross_origin()
+# def get_disable_dates():
+#     connection = connect.connect_db()
+#     cursor = connection.cursor()
+#     disabled_days = db.get_all_disabled_dates(cursor, connection)
+#     connection.close()
+#     return flask.jsonify(disabled_days)
 
 
 # will get a day and return the available hours for that day
@@ -277,7 +277,7 @@ def add_city():
     cursor = connection.cursor()
     data_from_api = flask.request.data.decode()
     values = json.loads(data_from_api)
-    db.add_city(cursor, connection, values["city"])
+    db.add_city(cursor, connection, values["city"], values["region"])
     connection.close()
     return "ok"
 
@@ -447,6 +447,19 @@ def edit_service_name():
     db.edit_service_name(cursor, connection, values["service"], values["newName"])
     connection.close()
     return 'ok'
+
+
+# post method that receiving all unavailable dates there are
+@app.route("/post/disabled_dates", methods=["POST"])
+@cross_origin()
+def get_disabled_dates_and_by_region():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    disabled_days = db.get_all_disabled_dates(cursor, connection, values["city"])
+    connection.close()
+    return flask.jsonify(disabled_days)
 
 
 if __name__ == "__main__":
