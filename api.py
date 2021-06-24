@@ -234,7 +234,7 @@ def get_hours_for_day():
     values = json.loads(data_from_api)
     day = values["date"].split("T")
     new_day = db.day_plus_one(day[0])
-    hours = db.get_hours_for_day(cursor, new_day)
+    hours = db.get_hours_for_day(cursor, connection, new_day)
     connection.close()
     return flask.jsonify(hours)
 
@@ -337,6 +337,30 @@ def get_customers_address():
     address = db.get_customers_address(cursor, connection)
     connection.close()
     return flask.jsonify(address)
+
+
+# this is for shoing the address on the google map API
+@app.route("/get/now-hours", methods=["GET"])
+@cross_origin()
+def get_time():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    time = db.get_time_for_display(cursor, connection)
+    connection.close()
+    return flask.jsonify(time)
+
+
+# send feedback mail to customer after service
+@app.route("/post/time", methods=["POST"])
+@cross_origin()
+def update_time():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    data_from_api = flask.request.data.decode()
+    values = json.loads(data_from_api)
+    db.change_hours_for_day(cursor, connection, values["start"], values["end"], values["interval"])
+    connection.close()
+    return "ok"
 
 
 @app.route("/delete/booking", methods=["DELETE"])

@@ -1,6 +1,7 @@
 # Programmed by Matan Yamin - Final Project.
 import connect_database as connect
 from datetime import datetime, timedelta, date
+import time
 
 
 def connect_db():
@@ -241,10 +242,66 @@ def get_all_disabled_dates(cursor, mydb, city):
     return disabled
 
 
-def get_hours_for_day(cursor, day):
+def change_hours_for_day(cursor, mydb, start, end, interval):
+    """this function will get starting hour, ending hour and the interval between
+       and later it will update the time that the customers can choose"""
+    sql = "UPDATE Hours SET StartTime = %s, EndTime = %s, SpaceTime = %s"
+    val = (start, end, interval)
+    cursor.execute(sql, val)
+    mydb.commit()
+
+
+def get_time_for_display(cursor, mydb):
+    """this function returns the current starting time, ending time and the interval"""
+    cursor.execute("SELECT * FROM Hours;")
+    time = []
+    for i in cursor.fetchall():
+        time.append(i[0])
+        time.append(i[1])
+        time.append(i[2])
+    mydb.commit()
+    return time
+
+
+# def get_hours_for_day(cursor, mydb, day):
+#     """get hours for specific day"""
+#     hours = ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"]
+#     day_hours = []
+#     # this is the hours that are taken
+#     cursor.execute("SELECT Hour FROM Available_Dates WHERE day_id = %s", (day,))
+#     for i in cursor.fetchall():
+#         day_hours.append(i[0])
+#     for i in day_hours:
+#         if i in hours:
+#             hours.remove(i)
+#     mydb.commit()
+#     return hours
+
+
+def get_hours_for_day(cursor, mydb, day):
     """get hours for specific day"""
-    # hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
-    hours = ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"]
+    hours = []
+    # getting start, end and interval
+    time = get_time_for_display(cursor, mydb)
+    start_time, end_time, interval = time[0], time[1], time[2]
+    hour_start, hour_end = start_time[0:2], end_time[0:2]
+    # convert to time object for increasing interval in minutes:
+    start_time = datetime.strptime(start_time, '%H:%M')
+    temp = str(start_time.time())
+    # adding first hour to the list
+    hours.append(temp[:-3])
+    # this algo is increasing the time by the interval and then updates the old time with the new one
+    while hour_end > hour_start:
+        # adding th einterval
+        time_with_interval = (start_time + timedelta(minutes=interval)).time()
+        # converting to string for inserting to list
+        temp = str(time_with_interval)
+        # to avoid the seconds and get only hours and minutes
+        hours.append(temp[:-3])
+        # convert the old start time to the new we just added to the list
+        start_time = datetime.strptime(hours[-1], '%H:%M')
+        # this is to check if we passed the end time:
+        hour_start = temp[:2]
     day_hours = []
     # this is the hours that are taken
     cursor.execute("SELECT Hour FROM Available_Dates WHERE day_id = %s", (day,))
@@ -253,7 +310,9 @@ def get_hours_for_day(cursor, day):
     for i in day_hours:
         if i in hours:
             hours.remove(i)
+    mydb.commit()
     return hours
+
 
 
 def get_all_cities(cursor, mydb):
@@ -419,7 +478,6 @@ def get_customers_address(cursor, mydb):
             final_results.append(i)
     return final_results
 
-
 # def get_customers_address(cursor, mydb):
 #     """get all customers details from db for displaying in the table"""
 #     cursor.execute("SELECT * FROM Customers;")
@@ -517,3 +575,4 @@ def disable_by_region(cursor, mydb, city):
 
 if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB
+    # get_hours_for_day(cursor, connection)
