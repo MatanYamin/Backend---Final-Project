@@ -320,10 +320,30 @@ def edit_addon_price():
 
 @app.route("/get/customers", methods=["GET"])
 @cross_origin()
+def get_future_customers():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    customers = db.get_future_customers(cursor, connection)
+    connection.close()
+    return flask.jsonify(customers)
+
+
+@app.route("/get/all_customers", methods=["GET"])
+@cross_origin()
 def get_all_customers():
     connection = connect.connect_db()
     cursor = connection.cursor()
     customers = db.get_all_customers(cursor, connection)
+    connection.close()
+    return flask.jsonify(customers)
+
+
+@app.route("/get/past_customers", methods=["GET"])
+@cross_origin()
+def get_past_customers():
+    connection = connect.connect_db()
+    cursor = connection.cursor()
+    customers = db.get_past_customers(cursor, connection)
     connection.close()
     return flask.jsonify(customers)
 

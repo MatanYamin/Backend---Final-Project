@@ -314,7 +314,6 @@ def get_hours_for_day(cursor, mydb, day):
     return hours
 
 
-
 def get_all_cities(cursor, mydb):
     """this func gets all cities and sort them alphabet"""
     cursor.execute("SELECT City FROM Cities;")
@@ -433,8 +432,8 @@ def add_to_region(cursor, mydb, city, dat):
     mydb.commit()
 
 
-def get_all_customers(cursor, mydb):
-    """get all customers details from db for displaying in the table"""
+def get_future_customers(cursor, mydb):
+    """get all future customers details from db for displaying in the table"""
     cursor.execute("SELECT * FROM Customers;")
     customers = []
     today = date.today()
@@ -447,6 +446,32 @@ def get_all_customers(cursor, mydb):
         if i[6] >= str(today):
             future_bookings.append(i)
     return future_bookings
+
+
+def get_all_customers(cursor, mydb):
+    """get *all* customers details from db for displaying in the table"""
+    cursor.execute("SELECT * FROM Customers;")
+    customers = []
+    for i in cursor.fetchall():
+        customers.append(list(i))
+    mydb.commit()
+    return customers
+
+
+def get_past_customers(cursor, mydb):
+    """get past customers details from db for displaying in the table"""
+    cursor.execute("SELECT * FROM Customers;")
+    customers = []
+    today = date.today()
+    past_bookings = []
+    for i in cursor.fetchall():
+        customers.append(list(i))
+    mydb.commit()
+    sorted_by_date = sorted(customers, key=lambda x: x[6])
+    for i in sorted_by_date:
+        if i[6] < str(today):
+            past_bookings.append(i)
+    return past_bookings
 
 
 def get_customers_address(cursor, mydb):
@@ -575,4 +600,3 @@ def disable_by_region(cursor, mydb, city):
 
 if __name__ == '__main__':
     cursor, connection = connect_db()  # connect to DB
-    # get_hours_for_day(cursor, connection)
