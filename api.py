@@ -2,7 +2,7 @@ from flask import Flask
 import flask
 import json
 import email_handler as email
-import syn_calendar as sync
+# import syn_calendar as sync
 import event_handler as event
 import connect_database as connect
 import db_handling as db
@@ -27,8 +27,8 @@ def booking():
     values["day"] = db.findDay(values["date"]) + ": " + new_day
     email.email_handle(values)  # email handler sends emails to customer and manager
     values["date"] = db.handle_time(cursor, connection, values["date"], values["hour"])  # handle time changes the date
-    service = sync.syncalendar_and_service()
-    event.create_event_and_insert(service, values)  # create event in the calendar
+    # service = sync.syncalendar_and_service()
+    event.create_event_and_insert(values)  # create event in the calendar
     connection.close()
     return 'OK'
 
@@ -354,9 +354,9 @@ def get_past_customers():
 def get_customers_address():
     connection = connect.connect_db()
     cursor = connection.cursor()
-    address = db.get_customers_address(cursor, connection)
+    address, details = db.get_customers_address(cursor, connection)
     connection.close()
-    return flask.jsonify(address)
+    return flask.jsonify(address, details)
 
 
 # this is for shoing the address on the google map API

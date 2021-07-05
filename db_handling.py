@@ -329,7 +329,6 @@ def get_all_cities(cursor, mydb):
 
 def add_city(cursor, mydb, city, region):
     """will add city to the DB"""
-    print(region)
     sql = "INSERT INTO Cities (City, region) VALUES (%s, %s)"
     val = (city, region, )
     cursor.execute(sql, val)
@@ -479,6 +478,8 @@ def get_customers_address(cursor, mydb):
        the showing addresses will be only the future bookings"""
     cursor.execute("SELECT Address FROM Customers;")
     address = []
+    indexes = []
+    details_about_address = []
     final_results = []
     for i in cursor.fetchall():
         address.append(list(i))
@@ -495,20 +496,23 @@ def get_customers_address(cursor, mydb):
     # this loop keeping only the futre bookings after today
     for i in sorted_by_date:
         if i[6] >= str(today):
+            indexes.append(i[0])
             future_bookings.append(i[4])
     # after we have only future bookings, we are getting only the addresses for displaying in map
     for i in address:
         if i[0] in future_bookings:
             # whatever inside "future_bookings" is a future bookings so we append it to "final_results"
             final_results.append(i)
-    return final_results
+    for i in customers:
+        if i[0] in indexes:
+            details_about_address.append(i)
+    return final_results, details_about_address
 
 # def get_customers_address(cursor, mydb):
 #     """get all customers details from db for displaying in the table"""
 #     cursor.execute("SELECT * FROM Customers;")
 #     address = []
 #     for i in cursor.fetchall():
-#         # print(i[4])
 #         address.append(list(i[4]))
 #     mydb.commit()
 #     # sorted_by_date = sorted(customers, key=lambda x: x[6])

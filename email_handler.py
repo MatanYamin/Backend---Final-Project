@@ -49,7 +49,7 @@ def email_handle_manager(data):
     session.starttls() #enable security
     session.login(sender_address, sender_pass) # login with mail_id and password
     text = message.as_string()
-    session.sendmail(sender_address, cn.email_manager(), text)
+    session.sendmail(sender_address, cn.manager_email_contact(), text)
     session.quit()
 
 
