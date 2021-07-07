@@ -264,10 +264,25 @@ def get_all_cities():
     return flask.jsonify(cities)
 
 
-@app.route("/get/this", methods=["GET"])
+@app.route("/", methods=["GET"])
 @cross_origin()
-def get_something():
-    return "9000"
+def home_page():
+    html = """\
+        <html dir="RTL">
+          <head> 
+           <meta charset="utf-8">
+           </head>
+          <body style="
+    text-align: center;
+    font-size: 4vw;
+    margin-top: 3vw;"> 
+        Welcome to SkyCleaner's API 
+        <br/>
+            By Matan Yamin
+          </body>
+        </html>
+        """
+    return html
 
 
 @app.route("/post/city", methods=["POST"])

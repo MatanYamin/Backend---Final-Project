@@ -70,7 +70,6 @@ def create_event_and_insert(data):
     }
     # connecting to calendar and insert event
     event = service.events().insert(calendarId='primary', body=event).execute()
-    # event = service.events().insert(calendarId='primary', body=event).execute()
-    # service.events().insert(calendarId='primary', body=event).execute()
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    service.events().insert(calendarId='primary', body=event).execute()
     return "OK"
-
